@@ -1,2 +1,5 @@
 .DS_Store
 ~$*
+Generated *
+screenshots/
+images/*-animation.mp4
