@@ -727,7 +727,7 @@
     height: 58px;
     flex-shrink: 0;
     border-radius: 6px;
-    background-size: cover;
+    background-size: 130%;
     background-position: center;
     position: relative;
   }
@@ -1615,6 +1615,37 @@ function exportExcel() {
 
 function exportData() {
   const data = gatherData();
+
+  // Add context for AI agents / external systems
+  data._context = {
+    framework: "The CTO's New Engineering Ladder by Etienne de Bruin (March 2026)",
+    description: "A performance ladder that measures judgment, not just output. Engineers are assessed across 5 rungs, each with observable behaviors scored 1-4.",
+    source: "https://ctosub.com/p/the-ctos-new-engineering-ladder",
+    scoringScale: { 1: "Not Yet", 2: "Emerging", 3: "Consistent", 4: "Exemplary" },
+    rungLevelRule: "Final rung level = highest rung where the engineer scores ≥ 75%.",
+    rungs: RUNGS.map(r => ({
+      num: r.num,
+      title: r.title,
+      subtitle: r.subtitle,
+      question: r.question,
+      behaviors: r.behaviors,
+      promotionSignal: r.promotion
+    }))
+  };
+
+  // Compute summary
+  const summary = {};
+  RUNGS.forEach(r => {
+    const rd = data.rungs[r.num];
+    const answered = rd.scores.filter(s => s !== null).length;
+    const total = r.behaviors.length;
+    const score = rd.scores.reduce((a, s) => a + (s || 0), 0);
+    const max = total * 4;
+    const pct = max > 0 ? Math.round((score / max) * 100) : 0;
+    summary[r.num] = { title: r.title, answered, total, score, maxScore: max, percentage: pct + '%', meetsThreshold: pct >= 75 };
+  });
+  data._summary = summary;
+
   const name = data.engineerName ? data.engineerName.replace(/\s+/g, '-').toLowerCase() : 'unnamed';
   const date = data.reviewDate || 'undated';
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
