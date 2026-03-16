@@ -29,6 +29,9 @@
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
+  *, *::before, *::after {
+    font-family: inherit;
+  }
   body {
     font-family: 'Inter', -apple-system, sans-serif;
     background: var(--warm-cream);
@@ -39,7 +42,7 @@
   /* ── HERO ── */
   .hero {
     position: relative;
-    min-height: 70vh;
+    min-height: calc(100vh - 72px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -47,9 +50,12 @@
     background: linear-gradient(135deg, var(--dark-blue) 0%, var(--med-blue) 100%);
   }
   .hero-bg {
-    position: absolute; inset: 0;
-    background: url('images/hero-ladder-path.jpg') center/cover;
-    opacity: 0.25;
+    position: absolute; inset: -20px;
+    background: url('images/hero-ladder-path.jpg') center/contain no-repeat;
+    background-color: #faf6e4;
+    opacity: 0.5;
+    mask-image: radial-gradient(ellipse 70% 65% at center, black 50%, transparent 100%);
+    -webkit-mask-image: radial-gradient(ellipse 70% 65% at center, black 50%, transparent 100%);
   }
   .hero-content {
     position: relative; z-index: 2;
@@ -59,14 +65,14 @@
   }
   .hero h1 {
     font-family: 'Playfair Display', serif;
-    font-size: clamp(2.2rem, 5vw, 3.8rem);
+    font-size: clamp(2.8rem, 6vw, 4.5rem);
     color: white;
     margin-bottom: 0.5rem;
     letter-spacing: -0.02em;
   }
   .hero .subtitle {
     font-size: 1.15rem;
-    color: rgba(255,255,255,0.8);
+    color: rgba(255,255,255,0.85);
     font-weight: 300;
     margin-bottom: 1.5rem;
   }
@@ -76,48 +82,6 @@
     font-style: italic;
   }
 
-  /* ── ENGINEER INFO BAR ── */
-  .engineer-bar {
-    background: white;
-    border-bottom: 3px solid var(--med-blue);
-    padding: 1.2rem 2rem;
-    display: flex;
-    gap: 2rem;
-    align-items: center;
-    flex-wrap: wrap;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-  }
-  .engineer-bar label {
-    font-weight: 600;
-    font-size: 0.85rem;
-    color: var(--dark-blue);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-  .engineer-bar input[type="text"],
-  .engineer-bar input[type="date"] {
-    border: 1px solid #D1D5DB;
-    border-radius: 6px;
-    padding: 0.45rem 0.75rem;
-    font-size: 0.95rem;
-    font-family: inherit;
-    margin-left: 0.4rem;
-    width: 220px;
-    transition: border-color 0.2s;
-  }
-  .engineer-bar input:focus {
-    outline: none;
-    border-color: var(--med-blue);
-    box-shadow: 0 0 0 3px rgba(46,117,182,0.15);
-  }
-  .io-buttons {
-    margin-left: auto;
-    display: flex;
-    gap: 0.5rem;
-  }
   .btn {
     padding: 0.5rem 1rem;
     border: none;
@@ -126,25 +90,146 @@
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s;
-    font-family: inherit;
+    font-family: 'Inter', -apple-system, sans-serif;
   }
-  .btn-export {
+
+  /* ── FOOTER EXPORT/IMPORT BUTTON ── */
+  .footer-io-btn {
+    padding: 0.5rem 1.2rem;
+    border: none;
+    border-radius: 8px;
+    background: var(--accent-gold);
+    color: white;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.03em;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(184,134,11,0.3);
+  }
+  .footer-io-btn:hover {
+    background: #9A7209;
+    box-shadow: 0 4px 12px rgba(184,134,11,0.4);
+  }
+
+  /* ── IO POPUP ── */
+  .io-popup-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 500;
+    align-items: center;
+    justify-content: center;
+  }
+  .io-popup-overlay.open { display: flex; }
+  .io-popup {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 16px 48px rgba(0,0,0,0.25);
+    padding: 2rem;
+    width: 420px;
+    max-width: 90vw;
+    animation: menuSlideUp 0.25s ease-out;
+  }
+  @keyframes menuSlideUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .io-popup h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    color: var(--dark-blue);
+    margin-bottom: 1.2rem;
+  }
+  .io-popup-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    margin-bottom: 1.5rem;
+  }
+  .io-field label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--dark-blue);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.3rem;
+  }
+  .io-field input {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #D1D5DB;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    transition: border-color 0.2s;
+  }
+  .io-field input:focus {
+    outline: none;
+    border-color: var(--med-blue);
+    box-shadow: 0 0 0 3px rgba(46,117,182,0.12);
+  }
+  .io-popup-actions {
+    display: flex;
+    gap: 0.6rem;
+    margin-bottom: 1.2rem;
+  }
+  .io-action {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.8rem 0.5rem;
+    border: 2px solid #E5E7EB;
+    border-radius: 10px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--dark-blue);
+  }
+  .io-action:hover {
+    border-color: var(--med-blue);
+    background: #F0F7FF;
+  }
+  .io-action-icon {
+    font-size: 1.4rem;
+  }
+  .io-popup-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 0.8rem;
+    border-top: 1px solid #E5E7EB;
+  }
+  .io-reset {
+    border: none;
+    background: none;
+    color: var(--danger);
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0.4rem 0.6rem;
+    border-radius: 6px;
+    transition: background 0.15s;
+  }
+  .io-reset:hover { background: #FEE2E2; }
+  .io-close {
+    border: none;
     background: var(--dark-blue);
     color: white;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 0.5rem 1.2rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
   }
-  .btn-export:hover { background: #162d52; }
-  .btn-import {
-    background: white;
-    color: var(--dark-blue);
-    border: 2px solid var(--dark-blue);
-  }
-  .btn-import:hover { background: var(--light-blue); }
-  .btn-reset {
-    background: white;
-    color: var(--danger);
-    border: 2px solid var(--danger);
-  }
-  .btn-reset:hover { background: #FEE2E2; }
+  .io-close:hover { background: #162d52; }
   .btn-music {
     background: white;
     color: var(--dark-blue);
@@ -167,18 +252,21 @@
     50% { box-shadow: 0 0 8px rgba(46,117,182,0.4); }
   }
 
-  #importFile { display: none; }
 
 
   /* ── MAIN CONTENT ── */
   .main-content {
-    padding-bottom: 7rem;
+    padding-bottom: 80px;
   }
 
   /* ── RUNG SECTION ── */
   .rung-section {
-    margin: 1.5rem 0;
+    margin-top: 3rem;
+    margin-bottom: 0;
     scroll-margin-top: 80px;
+  }
+  .rung-section:last-child {
+    margin-bottom: 0;
   }
 
   .rung-header {
@@ -186,11 +274,11 @@
     padding: 0.6rem 2rem;
     color: white;
     display: flex;
-    align-items: center;
+    align-items: baseline;
     gap: 0.8rem;
     flex-wrap: wrap;
     position: sticky;
-    top: var(--bar-height, 58px);
+    top: 0px;
     z-index: 15;
     box-shadow: 0 2px 8px rgba(0,0,0,0.15);
     transition: border-radius 0.2s;
@@ -203,39 +291,53 @@
     font-size: 1.3rem;
     letter-spacing: -0.01em;
   }
+  .rung-header-sub {
+    display: flex;
+    flex-direction: column;
+    gap: 0.05rem;
+  }
   .rung-header .formerly {
     font-style: italic;
     opacity: 0.7;
     font-size: 0.8rem;
   }
+  .rung-question-inline {
+    font-size: 0.75rem;
+    opacity: 0.8;
+    font-style: italic;
+  }
   .header-score {
     margin-left: auto;
     display: flex;
     align-items: center;
-    gap: 0.4rem;
+    gap: 0.5rem;
     font-weight: 700;
     font-size: 0.85rem;
     background: rgba(255,255,255,0.15);
-    padding: 0.25rem 0.8rem;
+    padding: 0.3rem 0.8rem 0.3rem 1rem;
     border-radius: 20px;
   }
   .header-score-val {
     font-size: 1.1rem;
   }
   .header-score-pct {
-    opacity: 0.7;
-    font-size: 0.8rem;
-    margin-left: 0.3rem;
+    opacity: 0.8;
+    font-size: 0.85rem;
+  }
+  .header-score-bar {
+    width: 60px;
+    height: 6px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .header-score-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: white;
+    transition: width 0.4s ease;
   }
 
-  .rung-question {
-    background: rgba(255,255,255,0.9);
-    padding: 1rem 2.5rem;
-    font-style: italic;
-    color: var(--dark-blue);
-    font-size: 1.05rem;
-    border-left: 4px solid var(--accent-gold);
-  }
 
   .rung-body {
     background: white;
@@ -245,37 +347,48 @@
 
   .rung-columns {
     display: grid;
-    grid-template-columns: 280px 1fr 280px;
+    grid-template-columns: 500px 1fr;
     gap: 0;
   }
-
+  .rung-left-col {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: 0.8rem;
+    background: var(--warm-cream);
+  }
   .rung-illustration, .rung-infographic {
     display: flex;
     align-items: flex-start;
     justify-content: center;
-    padding: 0.6rem;
-    background: var(--warm-cream);
   }
-  .rung-illustration img, .rung-infographic img,
-  .rung-illustration .placeholder-img, .rung-infographic .placeholder-img {
+  .rung-left-col {
     position: sticky;
-    top: calc(var(--bar-height, 58px) + 52px);
+    top: calc(0px + 52px);
+    align-self: start;
+    max-height: calc(100vh - 52px - 72px);
+    overflow: hidden;
+  }
+  .rung-layered {
+    max-height: calc(100vh - 52px - 72px - 16px);
   }
   .rung-illustration img, .rung-infographic img {
     width: 100%;
-    max-width: 268px;
+    max-width: 480px;
+    max-height: calc(100vh - 52px - 72px - 16px);
+    object-fit: contain;
     border-radius: 12px;
     box-shadow: 0 2px 12px rgba(0,0,0,0.1);
     object-fit: cover;
   }
   .rung-illustration video {
     width: 100%;
-    max-width: 268px;
+    max-width: 480px;
     border-radius: 12px;
     box-shadow: 0 2px 12px rgba(0,0,0,0.1);
     object-fit: cover;
     position: sticky;
-    top: calc(var(--bar-height, 58px) + 52px);
+    top: calc(0px + 52px);
     display: none;
   }
   .rung-illustration:hover video {
@@ -286,7 +399,7 @@
   }
   .placeholder-img {
     width: 100%;
-    max-width: 268px;
+    max-width: 480px;
     aspect-ratio: 2/3;
     border-radius: 12px;
     display: flex;
@@ -305,6 +418,29 @@
     opacity: 0.4;
   }
 
+  /* ── LAYERED ILLUSTRATION + INFOGRAPHIC ── */
+  .rung-layered {
+    position: relative;
+    width: 100%;
+  }
+  .rung-layered .rung-infographic {
+    position: relative;
+    z-index: 1;
+  }
+  .rung-illustration-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    opacity: 0.35;
+    transition: opacity 0.3s;
+  }
+  .rung-layered:hover .rung-illustration-overlay {
+    opacity: 0.15;
+  }
+
+
   /* ── FORM TABLE ── */
   .rung-form {
     padding: 1.5rem;
@@ -314,18 +450,18 @@
   .behavior-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 0.9rem;
+    font-size: 1rem;
   }
   .behavior-table thead th {
-    padding: 0.6rem 0.4rem;
-    font-size: 0.75rem;
+    padding: 0.7rem 0.5rem;
+    font-size: 0.8rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     text-align: center;
     border-bottom: 2px solid var(--light-blue);
     color: var(--dark-blue);
     position: sticky;
-    top: calc(var(--bar-height, 58px) + 46px);
+    top: calc(0px + 46px);
     z-index: 10;
     background: white;
     box-shadow: 0 2px 4px rgba(0,0,0,0.06);
@@ -335,13 +471,13 @@
     width: 45%;
   }
   .behavior-table thead th:last-child {
-    text-align: left;
-    width: 20%;
+    text-align: center;
+    width: 12%;
   }
   .behavior-table thead .score-header {
     width: 9%;
     min-width: 70px;
-    font-size: 0.7rem;
+    font-size: 0.75rem;
   }
   .score-header.not-yet { background: #FEE2E2; border-radius: 6px 6px 0 0; }
   .score-header.emerging { background: #FEF3C7; border-radius: 6px 6px 0 0; }
@@ -354,12 +490,13 @@
   }
   .behavior-table tbody tr:hover { background: #F9FAFB; }
   .behavior-table td {
-    padding: 0.7rem 0.4rem;
+    padding: 0.8rem 0.5rem;
     vertical-align: middle;
   }
   .behavior-table td:first-child {
-    font-size: 0.85rem;
-    line-height: 1.4;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: var(--text-dark);
     padding-right: 0.8rem;
   }
 
@@ -444,7 +581,7 @@
   .note-preview:hover .note-icon { opacity: 0.6; }
   .note-preview.has-content .note-icon { opacity: 0.7; color: var(--med-blue); }
   .note-preview .note-text {
-    font-size: 0.75rem;
+    font-size: 0.85rem;
     color: var(--text-muted);
     white-space: nowrap;
     overflow: hidden;
@@ -589,7 +726,7 @@
     box-shadow: 0 2px 12px rgba(31,56,100,0.08);
   }
   .promotion-signal {
-    font-size: 0.85rem;
+    font-size: 0.95rem;
     color: var(--text-muted);
     margin-bottom: 1rem;
     line-height: 1.6;
@@ -1028,24 +1165,25 @@
     .rung-columns {
       grid-template-columns: 1fr;
     }
-    .rung-illustration, .rung-infographic {
+    .rung-left-col {
       display: none;
     }
   }
+  @media (max-width: 900px) {
+    .footer-rung-item .fr-name { display: none; }
+    .footer-rung-item .fr-completion { display: none; }
+    .footer-rung-item .fr-jump { display: none; }
+    .footer-rung-item .fr-info { display: none; }
+    .footer-rung-chevron { display: none; }
+    .footer-rung-item { flex: 0; padding: 0 0.3rem; }
+  }
   @media (max-width: 768px) {
-    .engineer-bar {
-      flex-direction: column;
-      align-items: stretch;
-      gap: 0.8rem;
-    }
-    .engineer-bar input { width: 100%; }
-    .io-buttons { margin-left: 0; justify-content: center; }
     .hero { min-height: 50vh; }
     .rung-header { padding: 0.5rem 1rem; }
     .rung-header h2 { font-size: 1.1rem; }
     .behavior-table { font-size: 0.8rem; }
-    .footer-inner { padding: 0.7rem 1rem; gap: 0.8rem; }
-    .footer-rung-item { min-width: 60px; }
+    .footer-inner { height: auto; padding: 0.5rem; }
+    .footer-right { gap: 0.5rem; padding: 0 0.5rem; }
   }
 </style>
 </head>
@@ -1061,27 +1199,10 @@
   </div>
 </section>
 
-<!-- ── ENGINEER BAR (sticky) ── -->
-<div class="engineer-bar">
-  <div>
-    <label>Engineer</label>
-    <input type="text" id="engineerName" placeholder="Full name...">
-  </div>
-  <div>
-    <label>Review Date</label>
-    <input type="date" id="reviewDate">
-  </div>
-  <div class="io-buttons">
-    <button class="btn btn-export" onclick="exportExcel()" style="background:var(--success)">Export Excel</button>
-    <button class="btn btn-export" onclick="exportData()">Export JSON</button>
-    <button class="btn btn-import" onclick="document.getElementById('importFile').click()">Import JSON</button>
-    <input type="file" id="importFile" accept=".json" onchange="importData(event)">
-    <button class="btn btn-reset" onclick="resetAll()">Reset</button>
-    <button class="btn btn-music" id="musicBtn" onclick="toggleMusic()" title="Focus music">♪</button>
-    <audio id="musicA" src="images/neon_horizon_drive.mp4" preload="auto"></audio>
-    <audio id="musicB" src="images/neon_horizon_drive.mp4" preload="auto"></audio>
-  </div>
-</div>
+<!-- Hidden elements -->
+<input type="file" id="importFile" accept=".json" onchange="importData(event)" style="display:none">
+<audio id="musicA" src="images/neon_horizon_drive.mp4" preload="auto"></audio>
+<audio id="musicB" src="images/neon_horizon_drive.mp4" preload="auto"></audio>
 
 <!-- ── MAIN CONTENT ── -->
 <div class="main-content" id="mainContent"></div>
@@ -1139,6 +1260,43 @@
         <div class="fl-label">Final Rung Level</div>
         <div class="fl-name">Not yet assessed</div>
       </div>
+      <button class="btn btn-music" id="musicBtn" onclick="toggleMusic()" title="Focus music">♪</button>
+      <button class="footer-io-btn" onclick="openIOPopup()">Export / Import</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── EXPORT/IMPORT POPUP ── -->
+<div class="io-popup-overlay" id="ioPopup" onclick="if(event.target===this)closeIOPopup()">
+  <div class="io-popup">
+    <h3>Export / Import</h3>
+    <div class="io-popup-fields">
+      <div class="io-field">
+        <label for="engineerName">Engineer Name</label>
+        <input type="text" id="engineerName" placeholder="Full name (optional)">
+      </div>
+      <div class="io-field">
+        <label for="reviewDate">Review Date</label>
+        <input type="date" id="reviewDate">
+      </div>
+    </div>
+    <div class="io-popup-actions">
+      <button class="io-action io-export-excel" onclick="exportExcel(); closeIOPopup()">
+        <span class="io-action-icon">📊</span>
+        <span>Export Excel</span>
+      </button>
+      <button class="io-action io-export-json" onclick="exportData(); closeIOPopup()">
+        <span class="io-action-icon">📋</span>
+        <span>Export JSON</span>
+      </button>
+      <button class="io-action io-import" onclick="document.getElementById('importFile').click(); closeIOPopup()">
+        <span class="io-action-icon">📂</span>
+        <span>Import JSON</span>
+      </button>
+    </div>
+    <div class="io-popup-footer">
+      <button class="io-reset" onclick="resetAll(); closeIOPopup()">Reset All</button>
+      <button class="io-close" onclick="closeIOPopup()">Close</button>
     </div>
   </div>
 </div>
@@ -1254,18 +1412,28 @@ function renderRungs() {
     <section class="rung-section" id="rung${rung.num}">
       <div class="rung-header" style="background:${rung.color}">
         <h2>Rung ${rung.num}: ${rung.title}</h2>
-        <span class="formerly">${rung.subtitle}</span>
+        <div class="rung-header-sub">
+          <span class="formerly">${rung.subtitle}</span>
+          <span class="rung-question-inline">${rung.question}</span>
+        </div>
         <span class="header-score" id="headerScore${rung.num}">
           <span class="header-score-val" id="headerScoreVal${rung.num}">0</span>/<span>${rung.behaviors.length * 4}</span>
+          <div class="header-score-bar"><div class="header-score-bar-fill" id="headerFill${rung.num}" style="width:0%"></div></div>
           <span class="header-score-pct" id="headerScorePct${rung.num}">0%</span>
         </span>
       </div>
-      <div class="rung-question">Their question: <em>${rung.question}</em></div>
       <div class="rung-body">
         <div class="rung-columns">
-          <div class="rung-illustration" style="cursor:pointer" onclick="openImgLightbox(${rung.num})">
-            <img src="${rung.illustration}" alt="${rung.title} illustration">
-            ${rung.video ? `<video src="${rung.video}" muted loop playsinline preload="metadata"></video>` : ''}
+          <div class="rung-left-col" style="cursor:pointer" onclick="openImgLightbox(${rung.num})">
+            <div class="rung-layered">
+              <div class="rung-infographic">
+                ${infographicHTML}
+              </div>
+              <div class="rung-illustration rung-illustration-overlay">
+                <img src="${rung.illustration}" alt="${rung.title} illustration">
+                ${rung.video ? `<video src="${rung.video}" muted loop playsinline preload="metadata"></video>` : ''}
+              </div>
+            </div>
           </div>
           <div class="rung-form">
             <table class="behavior-table">
@@ -1285,7 +1453,7 @@ function renderRungs() {
                   <td>${b}</td>
                   ${[1,2,3,4].map(v => `
                   <td class="score-cell">
-                    <input type="radio" class="score-radio" name="rung${rung.num}_b${i}" value="${v}" data-rung="${rung.num}" onchange="updateScores()">
+                    <input type="radio" class="score-radio" name="rung${rung.num}_b${i}" value="${v}" data-rung="${rung.num}" onclick="toggleRadio(this)" onchange="updateScores()">
                   </td>`).join('')}
                   <td class="note-cell">
                     <div class="note-preview" onclick="openNote(${rung.num}, ${i})" id="notePreview_${rung.num}_${i}">
@@ -1297,12 +1465,9 @@ function renderRungs() {
                 </tr>`).join('')}
               </tbody>
             </table>
-            <div class="rung-score-bar" id="scoreBar${rung.num}">
-              <span class="score-label">Rung ${rung.num} Score</span>
-              <span class="rung-score-value" id="scoreVal${rung.num}">0 / ${rung.behaviors.length * 4}</span>
-              <div class="score-bar-track"><div class="score-bar-fill" id="scoreFill${rung.num}" style="width:0%"></div></div>
-              <span class="rung-score-pct" id="scorePct${rung.num}">0%</span>
-            </div>
+            <span id="scoreVal${rung.num}" style="display:none"></span>
+            <span id="scoreFill${rung.num}" style="display:none"></span>
+            <span id="scorePct${rung.num}" style="display:none"></span>
             <div class="promotion-section">
               <div class="promotion-signal"><strong>Promotion signal:</strong> ${rung.promotion}</div>
               <div class="promotion-radios">
@@ -1319,9 +1484,6 @@ function renderRungs() {
                 <input type="hidden" id="rungNotes${rung.num}" data-rung="${rung.num}" value="">
               </div>
             </div>
-          </div>
-          <div class="rung-infographic" style="cursor:pointer" onclick="openImgLightbox(${rung.num})">
-            ${infographicHTML}
           </div>
         </div>
       </div>
@@ -1343,6 +1505,17 @@ function renderRungs() {
       </div>
     </div>${idx < RUNGS.length - 1 ? '<span class="footer-rung-chevron">▸</span>' : ''}
   `).join('');
+}
+
+function toggleRadio(el) {
+  if (el.dataset.wasChecked === 'true') {
+    el.checked = false;
+    el.dataset.wasChecked = 'false';
+    updateScores();
+  } else {
+    document.querySelectorAll(`input[name="${el.name}"]`).forEach(r => r.dataset.wasChecked = 'false');
+    el.dataset.wasChecked = 'true';
+  }
 }
 
 function updateScores() {
@@ -1367,6 +1540,8 @@ function updateScores() {
     const hPct = document.getElementById(`headerScorePct${rung.num}`);
     if (hVal) hVal.textContent = score;
     if (hPct) hPct.textContent = `${pct}%`;
+    const hFill = document.getElementById(`headerFill${rung.num}`);
+    if (hFill) hFill.style.width = `${pct}%`;
 
     // Footer completeness
     let answered = 0;
@@ -1851,14 +2026,6 @@ function closeImgLightbox() {
   document.getElementById('imgLightbox').classList.remove('open');
 }
 
-// Measure engineer bar height and set CSS variable
-function measureBar() {
-  const bar = document.querySelector('.engineer-bar');
-  const h = bar.offsetHeight;
-  document.documentElement.style.setProperty('--bar-height', h + 'px');
-}
-measureBar();
-window.addEventListener('resize', measureBar);
 
 // Highlight active footer rung on scroll
 function updateFooterNav() {
@@ -1883,10 +2050,9 @@ window.addEventListener('scroll', updateFooterNav, { passive: true });
 
 // Sticky rung header: toggle border-radius when stuck
 function updateStickyHeaders() {
-  const barH = document.querySelector('.engineer-bar').offsetHeight;
   document.querySelectorAll('.rung-header').forEach(h => {
     const rect = h.getBoundingClientRect();
-    h.classList.toggle('is-stuck', Math.abs(rect.top - barH) < 2);
+    h.classList.toggle('is-stuck', Math.abs(rect.top) < 2);
   });
 }
 window.addEventListener('scroll', updateStickyHeaders, { passive: true });
@@ -1934,6 +2100,14 @@ function scheduleNext(current, next) {
       }, (FADE_DURATION * 1000) / steps);
     }
   }, 50);
+}
+
+// Export/Import popup
+function openIOPopup() {
+  document.getElementById('ioPopup').classList.add('open');
+}
+function closeIOPopup() {
+  document.getElementById('ioPopup').classList.remove('open');
 }
 
 function toggleMusic() {
