@@ -1,0 +1,1488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Engineering Ladder Assessment</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap');
+
+  :root {
+    --dark-blue: #1F3864;
+    --med-blue: #2E75B6;
+    --light-blue: #D6E4F0;
+    --accent-gold: #B8860B;
+    --warm-cream: #F5F0E8;
+    --text-dark: #2C2C2C;
+    --text-muted: #6B7280;
+    --success: #059669;
+    --warning: #D97706;
+    --danger: #DC2626;
+    --card-shadow: 0 4px 24px rgba(31,56,100,0.10);
+    --rung1: #5B8FA8;
+    --rung2: #4A7C9B;
+    --rung3: #3A6A8E;
+    --rung4: #2A5881;
+    --rung5: #1F3864;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--warm-cream);
+    color: var(--text-dark);
+    line-height: 1.6;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: linear-gradient(135deg, var(--dark-blue) 0%, var(--med-blue) 100%);
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: url('images/hero-ladder-path.jpg') center/cover;
+    opacity: 0.25;
+  }
+  .hero-content {
+    position: relative; z-index: 2;
+    text-align: center;
+    padding: 3rem 2rem;
+    max-width: 800px;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 5vw, 3.8rem);
+    color: white;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.02em;
+  }
+  .hero .subtitle {
+    font-size: 1.15rem;
+    color: rgba(255,255,255,0.8);
+    font-weight: 300;
+    margin-bottom: 1.5rem;
+  }
+  .hero .byline {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.5);
+    font-style: italic;
+  }
+
+  /* ── ENGINEER INFO BAR ── */
+  .engineer-bar {
+    background: white;
+    border-bottom: 3px solid var(--med-blue);
+    padding: 1.2rem 2rem;
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    flex-wrap: wrap;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  }
+  .engineer-bar label {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--dark-blue);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .engineer-bar input[type="text"],
+  .engineer-bar input[type="date"] {
+    border: 1px solid #D1D5DB;
+    border-radius: 6px;
+    padding: 0.45rem 0.75rem;
+    font-size: 0.95rem;
+    font-family: inherit;
+    margin-left: 0.4rem;
+    width: 220px;
+    transition: border-color 0.2s;
+  }
+  .engineer-bar input:focus {
+    outline: none;
+    border-color: var(--med-blue);
+    box-shadow: 0 0 0 3px rgba(46,117,182,0.15);
+  }
+  .io-buttons {
+    margin-left: auto;
+    display: flex;
+    gap: 0.5rem;
+  }
+  .btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+  .btn-export {
+    background: var(--dark-blue);
+    color: white;
+  }
+  .btn-export:hover { background: #162d52; }
+  .btn-import {
+    background: white;
+    color: var(--dark-blue);
+    border: 2px solid var(--dark-blue);
+  }
+  .btn-import:hover { background: var(--light-blue); }
+  .btn-reset {
+    background: white;
+    color: var(--danger);
+    border: 2px solid var(--danger);
+  }
+  .btn-reset:hover { background: #FEE2E2; }
+
+  #importFile { display: none; }
+
+  /* ── LADDER NAV ── */
+  .ladder-nav {
+    position: fixed;
+    left: 4px;
+    top: var(--bar-height, 58px);
+    bottom: 85px;
+    width: 44px;
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+  .ladder-nav.visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .ladder-rail {
+    width: 3px;
+    position: absolute;
+    top: 1rem;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(to bottom, var(--rung1), var(--rung5));
+    border-radius: 2px;
+  }
+  .ladder-rung-link {
+    position: relative;
+    z-index: 2;
+    width: 36px;
+    height: 36px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: all 0.3s;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+    cursor: pointer;
+    text-align: center;
+    line-height: 1;
+  }
+  .ladder-rung-link:hover {
+    transform: scale(1.15);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+  }
+  .ladder-rung-link.active {
+    transform: scale(1.25);
+    box-shadow: 0 0 0 2px white, 0 3px 10px rgba(0,0,0,0.35);
+  }
+
+  /* ── MAIN CONTENT ── */
+  .main-content {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 0 2rem 6rem;
+    padding-left: 3.5rem;
+  }
+
+  /* ── RUNG SECTION ── */
+  .rung-section {
+    margin: 3rem 0;
+    scroll-margin-top: 80px;
+  }
+
+  .rung-header {
+    border-radius: 16px 16px 0 0;
+    padding: 2rem 2.5rem;
+    color: white;
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .rung-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    letter-spacing: -0.01em;
+  }
+  .rung-header .formerly {
+    font-style: italic;
+    opacity: 0.7;
+    font-size: 0.95rem;
+  }
+  .rung-header .salary {
+    margin-left: auto;
+    font-weight: 700;
+    font-size: 1.1rem;
+    background: rgba(255,255,255,0.15);
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+  }
+
+  .rung-question {
+    background: rgba(255,255,255,0.9);
+    padding: 1rem 2.5rem;
+    font-style: italic;
+    color: var(--dark-blue);
+    font-size: 1.05rem;
+    border-left: 4px solid var(--accent-gold);
+  }
+
+  .rung-body {
+    background: white;
+    border-radius: 0 0 16px 16px;
+    box-shadow: var(--card-shadow);
+  }
+
+  .rung-columns {
+    display: grid;
+    grid-template-columns: 340px 1fr 340px;
+    gap: 0;
+  }
+
+  .rung-illustration, .rung-infographic {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 1.5rem;
+    background: var(--warm-cream);
+  }
+  .rung-illustration img, .rung-infographic img,
+  .rung-illustration .placeholder-img, .rung-infographic .placeholder-img {
+    position: sticky;
+    top: 80px;
+  }
+  .rung-illustration img, .rung-infographic img {
+    width: 100%;
+    max-width: 320px;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+    object-fit: cover;
+  }
+  .placeholder-img {
+    width: 100%;
+    max-width: 320px;
+    aspect-ratio: 2/3;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    border: 2px dashed #CBD5E1;
+    background: linear-gradient(135deg, #F8FAFC, #EEF2F7);
+  }
+  .placeholder-img svg {
+    width: 48px;
+    height: 48px;
+    opacity: 0.4;
+  }
+
+  /* ── FORM TABLE ── */
+  .rung-form {
+    padding: 1.5rem;
+    min-width: 0;
+  }
+
+  .behavior-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+  }
+  .behavior-table thead th {
+    padding: 0.6rem 0.4rem;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-align: center;
+    border-bottom: 2px solid var(--light-blue);
+    color: var(--dark-blue);
+    position: sticky;
+    top: var(--bar-height, 58px);
+    z-index: 10;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+  }
+  .behavior-table thead th:first-child {
+    text-align: left;
+    width: 45%;
+  }
+  .behavior-table thead th:last-child {
+    text-align: left;
+    width: 20%;
+  }
+  .behavior-table thead .score-header {
+    width: 9%;
+    min-width: 70px;
+    font-size: 0.7rem;
+  }
+  .score-header.not-yet { background: #FEE2E2; border-radius: 6px 6px 0 0; }
+  .score-header.emerging { background: #FEF3C7; border-radius: 6px 6px 0 0; }
+  .score-header.consistent { background: var(--light-blue); border-radius: 6px 6px 0 0; }
+  .score-header.exemplary { background: #D1FAE5; border-radius: 6px 6px 0 0; }
+
+  .behavior-table tbody tr {
+    border-bottom: 1px solid #F3F4F6;
+    transition: background 0.15s;
+  }
+  .behavior-table tbody tr:hover { background: #F9FAFB; }
+  .behavior-table td {
+    padding: 0.7rem 0.4rem;
+    vertical-align: middle;
+  }
+  .behavior-table td:first-child {
+    font-size: 0.85rem;
+    line-height: 1.4;
+    padding-right: 0.8rem;
+  }
+
+  /* Radio buttons as score selectors */
+  .score-cell {
+    text-align: center;
+  }
+  .score-radio {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 26px;
+    height: 26px;
+    border: 2px solid #D1D5DB;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+  }
+  .score-radio:hover {
+    border-color: var(--med-blue);
+    transform: scale(1.1);
+  }
+  .score-radio:checked {
+    border-width: 3px;
+  }
+  .score-radio[value="1"]:checked { border-color: var(--danger); background: #FEE2E2; }
+  .score-radio[value="2"]:checked { border-color: var(--warning); background: #FEF3C7; }
+  .score-radio[value="3"]:checked { border-color: var(--med-blue); background: var(--light-blue); }
+  .score-radio[value="4"]:checked { border-color: var(--success); background: #D1FAE5; }
+  .score-radio:checked::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    width: 8px; height: 8px;
+    border-radius: 50%;
+  }
+  .score-radio[value="1"]:checked::after { background: var(--danger); }
+  .score-radio[value="2"]:checked::after { background: var(--warning); }
+  .score-radio[value="3"]:checked::after { background: var(--med-blue); }
+  .score-radio[value="4"]:checked::after { background: var(--success); }
+
+  /* ── INLINE NOTES (click to edit) ── */
+  .note-cell {
+    position: relative;
+    min-width: 90px;
+  }
+  .note-preview {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    cursor: pointer;
+    padding: 0.3rem 0.4rem;
+    border-radius: 4px;
+    transition: background 0.15s;
+    min-height: 28px;
+  }
+  .note-preview:hover { background: #F3F4F6; }
+  .note-preview .note-icon {
+    width: 16px; height: 16px;
+    flex-shrink: 0;
+    opacity: 0.3;
+    transition: opacity 0.15s;
+  }
+  .note-preview:hover .note-icon { opacity: 0.6; }
+  .note-preview.has-content .note-icon { opacity: 0.7; color: var(--med-blue); }
+  .note-preview .note-text {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100px;
+  }
+  .note-preview.has-content .note-text {
+    color: var(--dark-blue);
+    font-weight: 500;
+  }
+  .note-editor-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.3);
+    z-index: 500;
+    align-items: center;
+    justify-content: center;
+  }
+  .note-editor-overlay.open { display: flex; }
+  .note-editor {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+    padding: 1.5rem;
+    width: 420px;
+    max-width: 90vw;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+  }
+  .note-editor-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.8rem;
+  }
+  .note-editor-header h4 {
+    font-size: 0.85rem;
+    color: var(--dark-blue);
+    font-weight: 600;
+  }
+  .note-editor-context {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 0.6rem;
+    line-height: 1.4;
+    padding: 0.4rem 0.6rem;
+    background: #F9FAFB;
+    border-radius: 6px;
+    border-left: 3px solid var(--med-blue);
+  }
+  .note-editor textarea {
+    width: 100%;
+    min-height: 100px;
+    border: 1px solid #D1D5DB;
+    border-radius: 8px;
+    padding: 0.7rem;
+    font-family: inherit;
+    font-size: 0.9rem;
+    resize: vertical;
+    line-height: 1.5;
+    transition: border-color 0.2s;
+  }
+  .note-editor textarea:focus {
+    outline: none;
+    border-color: var(--med-blue);
+    box-shadow: 0 0 0 3px rgba(46,117,182,0.12);
+  }
+  .note-editor-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 0.8rem;
+  }
+  .note-btn {
+    padding: 0.45rem 1rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    border: none;
+    transition: all 0.15s;
+  }
+  .note-btn-save { background: var(--dark-blue); color: white; }
+  .note-btn-save:hover { background: #162d52; }
+  .note-btn-cancel { background: #F3F4F6; color: var(--text-dark); }
+  .note-btn-cancel:hover { background: #E5E7EB; }
+  .note-btn-clear { background: none; color: var(--danger); margin-right: auto; padding-left: 0; }
+  .note-btn-clear:hover { text-decoration: underline; }
+
+  /* ── RUNG SCORE BAR ── */
+  .rung-score-bar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.8rem 1.2rem;
+    margin-top: 0.5rem;
+    background: linear-gradient(90deg, var(--dark-blue), var(--med-blue));
+    color: white;
+    border-radius: 10px;
+  }
+  .rung-score-bar .score-label {
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .rung-score-value {
+    font-size: 1.6rem;
+    font-weight: 700;
+    min-width: 70px;
+  }
+  .score-bar-track {
+    flex: 1;
+    height: 10px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  .score-bar-fill {
+    height: 100%;
+    border-radius: 5px;
+    transition: width 0.5s ease;
+    background: linear-gradient(90deg, var(--warning), var(--success));
+  }
+  .rung-score-pct {
+    font-size: 1.2rem;
+    font-weight: 700;
+    min-width: 50px;
+    text-align: right;
+  }
+
+  /* ── PROMOTION SECTION ── */
+  .promotion-section {
+    padding: 1rem 0;
+    margin-top: 0.5rem;
+    background: #F8FAFC;
+    border-top: 1px solid #E5E7EB;
+    border-radius: 8px;
+  }
+  .promotion-signal {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 0.8rem;
+    line-height: 1.5;
+  }
+  .promotion-signal strong {
+    color: var(--dark-blue);
+  }
+  .promotion-radios {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    margin-bottom: 0.8rem;
+  }
+  .promotion-radios span {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--dark-blue);
+    margin-right: 0.5rem;
+  }
+  .promotion-radios label {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+  .notes-section {
+    margin-top: 0.8rem;
+  }
+  .notes-section label {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--dark-blue);
+    display: block;
+    margin-bottom: 0.3rem;
+  }
+  .notes-textarea {
+    width: 100%;
+    min-height: 60px;
+    border: 1px solid #D1D5DB;
+    border-radius: 6px;
+    padding: 0.6rem;
+    font-family: inherit;
+    font-size: 0.85rem;
+    resize: vertical;
+    transition: border-color 0.2s;
+  }
+  .notes-textarea:focus {
+    outline: none;
+    border-color: var(--med-blue);
+    box-shadow: 0 0 0 3px rgba(46,117,182,0.1);
+  }
+
+  /* ── FOOTER BANNER ── */
+  .footer-banner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 200;
+    background: var(--dark-blue);
+    color: white;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.2);
+    transition: transform 0.3s ease;
+  }
+  .footer-inner {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 0.7rem 2rem 0.7rem 3.5rem;
+    max-width: 1600px;
+    margin: 0 auto;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
+  .footer-rung-scores {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .footer-rung-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.15rem;
+    min-width: 80px;
+  }
+  .footer-rung-item .fr-name {
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: 0.7;
+    white-space: nowrap;
+  }
+  .footer-rung-item .fr-score {
+    font-size: 0.95rem;
+    font-weight: 700;
+  }
+  .footer-rung-item .fr-pct {
+    font-size: 0.7rem;
+    opacity: 0.6;
+  }
+  .footer-rung-item .fr-bar {
+    width: 100%;
+    height: 4px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .footer-rung-item .fr-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.5s;
+    background: linear-gradient(90deg, var(--warning), var(--success));
+  }
+  .footer-divider {
+    width: 1px;
+    height: 40px;
+    background: rgba(255,255,255,0.2);
+    flex-shrink: 0;
+  }
+  .footer-overall {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.1rem;
+    flex-shrink: 0;
+    min-width: 80px;
+  }
+  .footer-overall .fo-label {
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: 0.7;
+  }
+  .footer-overall .fo-score {
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+  .footer-overall .fo-pct {
+    font-size: 0.75rem;
+    opacity: 0.6;
+  }
+  .footer-final-level {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 8px;
+    padding: 0.4rem 1rem;
+    text-align: center;
+    flex-shrink: 0;
+    min-width: 200px;
+  }
+  .footer-final-level .fl-label {
+    font-size: 0.55rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0.6;
+  }
+  .footer-final-level .fl-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--accent-gold);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 1200px) {
+    .rung-columns {
+      grid-template-columns: 1fr;
+    }
+    .rung-illustration, .rung-infographic {
+      display: none;
+    }
+    .ladder-nav { display: none; }
+    .main-content { padding-left: 2rem; }
+  }
+  @media (max-width: 768px) {
+    .engineer-bar {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.8rem;
+    }
+    .engineer-bar input { width: 100%; }
+    .io-buttons { margin-left: 0; justify-content: center; }
+    .hero { min-height: 50vh; }
+    .rung-header { padding: 1.2rem 1.5rem; }
+    .rung-header h2 { font-size: 1.4rem; }
+    .behavior-table { font-size: 0.8rem; }
+    .footer-inner { padding: 0.7rem 1rem; gap: 0.8rem; }
+    .footer-rung-item { min-width: 60px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <h1>The Engineering Ladder</h1>
+    <p class="subtitle">A performance ladder that measures judgment, not just output</p>
+    <p class="byline">Based on "The CTO's New Engineering Ladder" by Etienne de Bruin, March 2026</p>
+  </div>
+</section>
+
+<!-- ── ENGINEER BAR (sticky) ── -->
+<div class="engineer-bar">
+  <div>
+    <label>Engineer</label>
+    <input type="text" id="engineerName" placeholder="Full name...">
+  </div>
+  <div>
+    <label>Review Date</label>
+    <input type="date" id="reviewDate">
+  </div>
+  <div class="io-buttons">
+    <button class="btn btn-export" onclick="exportExcel()" style="background:var(--success)">Export Excel</button>
+    <button class="btn btn-export" onclick="exportData()">Export JSON</button>
+    <button class="btn btn-import" onclick="document.getElementById('importFile').click()">Import JSON</button>
+    <input type="file" id="importFile" accept=".json" onchange="importData(event)">
+    <button class="btn btn-reset" onclick="resetAll()">Reset</button>
+  </div>
+</div>
+
+<!-- ── LADDER NAV ── -->
+<nav class="ladder-nav" id="ladderNav">
+  <div class="ladder-rail"></div>
+  <a class="ladder-rung-link" style="background:var(--rung1)" href="#rung1" title="The Apprentice">1</a>
+  <a class="ladder-rung-link" style="background:var(--rung2)" href="#rung2" title="The Builder">2</a>
+  <a class="ladder-rung-link" style="background:var(--rung3)" href="#rung3" title="The Architect">3</a>
+  <a class="ladder-rung-link" style="background:var(--rung4)" href="#rung4" title="The Multiplier">4</a>
+  <a class="ladder-rung-link" style="background:var(--rung5)" href="#rung5" title="The Strategist">5</a>
+</nav>
+
+<!-- ── MAIN CONTENT ── -->
+<div class="main-content" id="mainContent"></div>
+
+<!-- ── NOTE EDITOR MODAL ── -->
+<div class="note-editor-overlay" id="noteOverlay" onclick="if(event.target===this)closeNote()">
+  <div class="note-editor">
+    <div class="note-editor-header">
+      <h4 id="noteEditorTitle">Note</h4>
+    </div>
+    <div class="note-editor-context" id="noteEditorContext"></div>
+    <textarea id="noteEditorText" placeholder="Write your note..."></textarea>
+    <div class="note-editor-actions">
+      <button class="note-btn note-btn-clear" onclick="clearNote()">Clear</button>
+      <button class="note-btn note-btn-cancel" onclick="closeNote()">Cancel</button>
+      <button class="note-btn note-btn-save" onclick="saveNote()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── FOOTER BANNER ── -->
+<div class="footer-banner" id="footerBanner">
+  <div class="footer-inner">
+    <div class="footer-rung-scores" id="footerRungScores"></div>
+    <div class="footer-divider"></div>
+    <div class="footer-overall">
+      <span class="fo-label">Overall</span>
+      <span class="fo-score" id="overallScore">0/140</span>
+      <span class="fo-pct" id="overallPct">0%</span>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-final-level" id="finalLevel">
+      <div class="fl-label">Final Rung Level</div>
+      <div class="fl-name">Not yet assessed</div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
+<script>
+const RUNGS = [
+  {
+    num: 1, title: "The Apprentice", subtitle: "formerly Junior Engineer",
+    salary: "$85K\u2013$120K", color: "var(--rung1)",
+    question: "Why might this output be wrong?",
+    illustration: "images/rung1-apprentice-illustration.jpg",
+    infographic: "images/rung1-apprentice-infographic.jpg",
+    behaviors: [
+      "Flags inconsistencies in code before merging",
+      "Asks for context before shipping features",
+      "Escalates uncertainty rather than guessing through it",
+      "Pull requests include questions, not just solutions",
+      "Builds original features and writes real code",
+      "Interrogates AI-assisted output \u2014 their own and others\u2019",
+      "Can explain why AI-generated code will fail in a specific production scenario"
+    ],
+    promotion: "Can explain why AI-generated code will fail in production. Has shipped something end-to-end with minimal guidance. Postmortem was more insightful than expected."
+  },
+  {
+    num: 2, title: "The Builder", subtitle: "formerly Mid-Level Engineer",
+    salary: "$120K\u2013$155K", color: "var(--rung2)",
+    question: "What is this feature protecting the company from?",
+    illustration: "images/rung2-builder-illustration.jpg",
+    infographic: "images/rung2-builder-infographic.jpg",
+    behaviors: [
+      "Owns a feature end-to-end: definition of done, edge cases, monitoring, customer impact",
+      "Knows when to throw away AI-generated scaffolding and start again",
+      "Writes specs or design docs before prompting \u2014 thinks before building",
+      "Proactively identifies problems that nobody assigned them",
+      "Technical decisions reference company goals without being prompted",
+      "Understands what\u2019s upstream and downstream of the feature they\u2019re building",
+      "Has mentored an Apprentice visibly and with measurable result"
+    ],
+    promotion: "Has resolved an unassigned problem. Has mentored successfully. Can connect a technical decision to a business outcome without prompting. Doesn\u2019t need tickets to know what matters."
+  },
+  {
+    num: 3, title: "The Architect", subtitle: "formerly Senior Engineer",
+    salary: "$155K\u2013$210K", color: "var(--rung3)",
+    question: "What does this decision cost us in six months?",
+    illustration: "images/rung3-architect-illustration.jpg",
+    infographic: "images/rung3-architect-infographic.jpg",
+    behaviors: [
+      "Walks into cross-functional conversations with answers before questions are finished",
+      "The C-Suite understands them \u2014 translates technical concepts for executives",
+      "Technical instincts show up as financial clarity",
+      "Translates technical debt into business cost without being asked",
+      "Sees downstream consequences of decisions before anyone else",
+      "Has improved the output quality of a team they don\u2019t manage",
+      "Has driven a consequential build-vs-buy decision and can show the math"
+    ],
+    promotion: "Has demonstrably improved output quality of a team they don\u2019t manage. Has translated a technical risk into a business risk understood by a non-technical executive. Has driven a build-vs-buy decision with clear math."
+  },
+  {
+    num: 4, title: "The Multiplier", subtitle: "formerly Staff Engineer",
+    salary: "$210K\u2013$300K", color: "var(--rung4)",
+    question: "How does the team make better decisions because of you?",
+    illustration: "images/rung4-multiplier-illustration.jpg",
+    infographic: "images/rung4-multiplier-infographic.jpg",
+    behaviors: [
+      "Engineers leave their code reviews smarter than when they arrived",
+      "Their standards get adopted without being mandated",
+      "Their departure would be felt across teams, not just their own",
+      "Defines how AI-generated output gets evaluated, trusted, and deployed",
+      "Builds systems that transfer knowledge rather than hoarding it",
+      "Output is the quality of everyone else\u2019s judgment, not just features",
+      "Impact compounds beyond their own individual contribution"
+    ],
+    promotion: "Has changed how the engineering organization evaluates an entire category of work \u2014 not just one team. The bar is voluntary adoption: people follow the standard because it made their work better, not because they were told to."
+  },
+  {
+    num: 5, title: "The Strategist", subtitle: "formerly Principal Engineer",
+    salary: "$280K\u2013$450K+", color: "var(--rung5)",
+    question: "Where do we need to be in two years and what does it cost to get there?",
+    illustration: "images/rung5-strategist-illustration.jpg",
+    infographic: "images/rung5-strategist-infographic.jpg",
+    behaviors: [
+      "In the room for business decisions before technical implications surface",
+      "The CEO treats their input as commercial, not just technical",
+      "Can quantify the cost of standing still",
+      "Build-vs-buy opinions factor in organizational capacity, not just tech preference",
+      "Understands the Engineering Efficiency Ratio and how their decisions move it",
+      "Thinks about business problems before the business knows it has a question",
+      "Can point to decisions they drove that the company still benefits from years later"
+    ],
+    promotion: "Can point to two decisions they made that the company is still benefiting from two years later. Not decisions they recommended \u2014 decisions they drove."
+  }
+];
+
+function renderRungs() {
+  const main = document.getElementById('mainContent');
+  main.innerHTML = RUNGS.map(rung => {
+    const infographicHTML = rung.infographic
+      ? `<img src="${rung.infographic}" alt="${rung.title} infographic">`
+      : `<div class="placeholder-img">
+           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+           <span>Infographic<br>coming soon</span>
+         </div>`;
+
+    return `
+    <section class="rung-section" id="rung${rung.num}">
+      <div class="rung-header" style="background:${rung.color}">
+        <h2>Rung ${rung.num}: ${rung.title}</h2>
+        <span class="formerly">${rung.subtitle}</span>
+        <span class="salary">${rung.salary}</span>
+      </div>
+      <div class="rung-question">Their question: <em>${rung.question}</em></div>
+      <div class="rung-body">
+        <div class="rung-columns">
+          <div class="rung-illustration">
+            <img src="${rung.illustration}" alt="${rung.title} illustration">
+          </div>
+          <div class="rung-form">
+            <table class="behavior-table">
+              <thead>
+                <tr>
+                  <th>Observable Behavior</th>
+                  <th class="score-header not-yet">1<br>Not Yet</th>
+                  <th class="score-header emerging">2<br>Emerging</th>
+                  <th class="score-header consistent">3<br>Consistent</th>
+                  <th class="score-header exemplary">4<br>Exemplary</th>
+                  <th>Notes</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${rung.behaviors.map((b, i) => `
+                <tr>
+                  <td>${b}</td>
+                  ${[1,2,3,4].map(v => `
+                  <td class="score-cell">
+                    <input type="radio" class="score-radio" name="rung${rung.num}_b${i}" value="${v}" data-rung="${rung.num}" onchange="updateScores()">
+                  </td>`).join('')}
+                  <td class="note-cell">
+                    <div class="note-preview" onclick="openNote(${rung.num}, ${i})" id="notePreview_${rung.num}_${i}">
+                      <svg class="note-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M11.5 1.5l3 3L5 14H2v-3L11.5 1.5z"/></svg>
+                      <span class="note-text">Add note</span>
+                    </div>
+                    <input type="hidden" class="note-data" data-rung="${rung.num}" data-behavior="${i}" value="">
+                  </td>
+                </tr>`).join('')}
+              </tbody>
+            </table>
+            <div class="rung-score-bar" id="scoreBar${rung.num}">
+              <span class="score-label">Rung ${rung.num} Score</span>
+              <span class="rung-score-value" id="scoreVal${rung.num}">0 / ${rung.behaviors.length * 4}</span>
+              <div class="score-bar-track"><div class="score-bar-fill" id="scoreFill${rung.num}" style="width:0%"></div></div>
+              <span class="rung-score-pct" id="scorePct${rung.num}">0%</span>
+            </div>
+            <div class="promotion-section">
+              <div class="promotion-signal"><strong>Promotion signal:</strong> ${rung.promotion}</div>
+              <div class="promotion-radios">
+                <span>Ready to promote?</span>
+                <label><input type="radio" name="promo${rung.num}" value="not_yet" data-rung="${rung.num}"> Not yet</label>
+                <label><input type="radio" name="promo${rung.num}" value="on_track" data-rung="${rung.num}"> On track</label>
+                <label><input type="radio" name="promo${rung.num}" value="ready" data-rung="${rung.num}"> Ready now</label>
+              </div>
+              <div class="notes-section">
+                <div class="note-preview rung-note-preview" onclick="openRungNote(${rung.num})" id="rungNotePreview_${rung.num}" style="padding:0.5rem 0.6rem;border:1px dashed #D1D5DB;border-radius:6px;">
+                  <svg class="note-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M11.5 1.5l3 3L5 14H2v-3L11.5 1.5z"/></svg>
+                  <span class="note-text" style="font-size:0.8rem">Add 1:1 notes...</span>
+                </div>
+                <input type="hidden" id="rungNotes${rung.num}" data-rung="${rung.num}" value="">
+              </div>
+            </div>
+          </div>
+          <div class="rung-infographic">
+            ${infographicHTML}
+          </div>
+        </div>
+      </div>
+    </section>`;
+  }).join('');
+
+  // Build footer rung scores
+  const footerScores = document.getElementById('footerRungScores');
+  footerScores.innerHTML = RUNGS.map(r => `
+    <div class="footer-rung-item">
+      <span class="fr-name">${r.num}. ${r.title.replace('The ','')}</span>
+      <span class="fr-score" id="totalScore${r.num}">0/${r.behaviors.length*4}</span>
+      <span class="fr-pct" id="totalPct${r.num}">0%</span>
+      <div class="fr-bar"><div class="fr-bar-fill" id="footerFill${r.num}" style="width:0%"></div></div>
+    </div>
+  `).join('');
+}
+
+function updateScores() {
+  let grandTotal = 0, grandMax = 0;
+  let highestQualified = 0;
+
+  RUNGS.forEach(rung => {
+    const max = rung.behaviors.length * 4;
+    grandMax += max;
+    let score = 0;
+    for (let i = 0; i < rung.behaviors.length; i++) {
+      const checked = document.querySelector(`input[name="rung${rung.num}_b${i}"]:checked`);
+      if (checked) score += parseInt(checked.value);
+    }
+    grandTotal += score;
+    const pct = max > 0 ? Math.round((score / max) * 100) : 0;
+
+    document.getElementById(`scoreVal${rung.num}`).textContent = `${score} / ${max}`;
+    document.getElementById(`scoreFill${rung.num}`).style.width = `${pct}%`;
+    document.getElementById(`scorePct${rung.num}`).textContent = `${pct}%`;
+    document.getElementById(`totalScore${rung.num}`).textContent = `${score}/${max}`;
+    document.getElementById(`totalPct${rung.num}`).textContent = `${pct}%`;
+    const footerFill = document.getElementById(`footerFill${rung.num}`);
+    if (footerFill) footerFill.style.width = `${pct}%`;
+
+    if (pct >= 75) highestQualified = rung.num;
+  });
+
+  const overallPct = grandMax > 0 ? Math.round((grandTotal / grandMax) * 100) : 0;
+  document.getElementById('overallScore').textContent = `${grandTotal}/${grandMax}`;
+  document.getElementById('overallPct').textContent = `${overallPct}%`;
+
+  const levelEl = document.getElementById('finalLevel');
+  if (grandTotal === 0) {
+    levelEl.querySelector('.fl-name').textContent = 'Not yet assessed';
+  } else if (highestQualified > 0) {
+    const r = RUNGS[highestQualified - 1];
+    levelEl.querySelector('.fl-name').textContent = `Rung ${r.num}: ${r.title}`;
+  } else {
+    levelEl.querySelector('.fl-name').textContent = 'Below Rung 1 \u2014 Focus on Apprentice behaviors';
+  }
+}
+
+function gatherData() {
+  const data = {
+    engineerName: document.getElementById('engineerName').value,
+    reviewDate: document.getElementById('reviewDate').value,
+    rungs: {}
+  };
+  RUNGS.forEach(rung => {
+    const rungData = { scores: [], notes: [], promoStatus: null, rungNotes: '' };
+    for (let i = 0; i < rung.behaviors.length; i++) {
+      const checked = document.querySelector(`input[name="rung${rung.num}_b${i}"]:checked`);
+      rungData.scores.push(checked ? parseInt(checked.value) : null);
+      const noteEl = document.querySelector(`.note-data[data-rung="${rung.num}"][data-behavior="${i}"]`);
+      rungData.notes.push(noteEl ? noteEl.value : '');
+    }
+    const promo = document.querySelector(`input[name="promo${rung.num}"]:checked`);
+    rungData.promoStatus = promo ? promo.value : null;
+    const rungNotesEl = document.getElementById(`rungNotes${rung.num}`);
+    rungData.rungNotes = rungNotesEl ? rungNotesEl.value : '';
+    data.rungs[rung.num] = rungData;
+  });
+  return data;
+}
+
+function exportExcel() {
+  const data = gatherData();
+  const wb = XLSX.utils.book_new();
+
+  // Style helpers
+  const darkBlue = {rgb: "1F3864"};
+  const medBlue = {rgb: "2E75B6"};
+  const lightBlue = {rgb: "D6E4F0"};
+  const gold = {rgb: "FFF2CC"};
+  const lightGray = {rgb: "F2F2F2"};
+  const white = {rgb: "FFFFFF"};
+  const greenBg = {rgb: "E2EFDA"};
+  const redBg = {rgb: "FCE4EC"};
+  const yellowBg = {rgb: "FEF3C7"};
+
+  const hdrStyle = {font:{bold:true,color:{rgb:"FFFFFF"},sz:11},fill:{fgColor:darkBlue},alignment:{horizontal:"center",vertical:"center"}};
+  const titleStyle = {font:{bold:true,color:{rgb:"FFFFFF"},sz:14},fill:{fgColor:darkBlue}};
+  const subStyle = {font:{italic:true,color:{rgb:"1F3864"},sz:11},fill:{fgColor:lightBlue}};
+  const labelStyle = {font:{bold:true,color:{rgb:"1F3864"},sz:10},fill:{fgColor:lightBlue}};
+  const valStyle = {font:{sz:10},alignment:{horizontal:"center",vertical:"center"}};
+  const boldCenter = {font:{bold:true,sz:11},alignment:{horizontal:"center"}};
+  const wrap = {alignment:{wrapText:true,vertical:"center"}};
+
+  function sc(ws, ref, style) { if(ws[ref]) ws[ref].s = style; }
+
+  // ── Summary sheet ──
+  const sRows = [
+    ['Engineering Ladder Assessment','','','','',''],
+    ['','','','','',''],
+    ['Engineer Name', data.engineerName||'','','','',''],
+    ['Review Date', data.reviewDate||'','','','',''],
+    ['','','','','',''],
+    ['Rung','Title','Score','Max','Percentage','Status']
+  ];
+  let grandTotal=0, grandMax=0, highestQ=0;
+  RUNGS.forEach(rung => {
+    const rd = data.rungs[rung.num];
+    const max = rung.behaviors.length*4;
+    const score = rd.scores.reduce((a,s)=>a+(s||0),0);
+    const pct = max>0?score/max:0;
+    grandTotal+=score; grandMax+=max;
+    if(pct>=0.75) highestQ=rung.num;
+    const status = pct>=0.75?'Strong':pct>=0.5?'Developing':score>0?'Needs growth':'Not assessed';
+    sRows.push([rung.num, rung.title, score, max, Math.round(pct*100)+'%', status]);
+  });
+  sRows.push(['','','','','','']);
+  sRows.push(['Overall Total','', grandTotal, grandMax, Math.round((grandTotal/grandMax)*100)+'%','']);
+  const lvl = highestQ>0?`Rung ${highestQ}: ${RUNGS[highestQ-1].title}`:grandTotal>0?'Below Rung 1':'Not yet assessed';
+  sRows.push(['Final Rung Level', lvl,'','','','']);
+
+  const sWs = XLSX.utils.aoa_to_sheet(sRows);
+  sWs['!cols'] = [{wch:20},{wch:20},{wch:8},{wch:6},{wch:12},{wch:14}];
+  sWs['!merges'] = [{s:{r:0,c:0},e:{r:0,c:5}}];
+  sc(sWs,'A1',titleStyle);
+  sc(sWs,'A3',labelStyle); sc(sWs,'A4',labelStyle);
+  sc(sWs,'B3',{fill:{fgColor:gold}}); sc(sWs,'B4',{fill:{fgColor:gold}});
+  for(let c=0;c<6;c++) sc(sWs,XLSX.utils.encode_cell({r:5,c}),hdrStyle);
+  RUNGS.forEach((r,i) => {
+    const row = 6+i;
+    const bg = i%2===0?{fgColor:white}:{fgColor:lightGray};
+    for(let c=0;c<6;c++) sc(sWs,XLSX.utils.encode_cell({r:row,c}),{fill:bg,alignment:{horizontal:c>=2?"center":"left"}});
+  });
+  const totRow = 12;
+  for(let c=0;c<6;c++) sc(sWs,XLSX.utils.encode_cell({r:totRow,c}),{font:{bold:true,sz:11,color:{rgb:"1F3864"}},fill:{fgColor:gold},alignment:{horizontal:c>=2?"center":"left"}});
+  sc(sWs,XLSX.utils.encode_cell({r:totRow+1,c:0}),{font:{bold:true,sz:12,color:{rgb:"FFFFFF"}},fill:{fgColor:darkBlue}});
+  sc(sWs,XLSX.utils.encode_cell({r:totRow+1,c:1}),{font:{bold:true,sz:12,color:{rgb:"B8860B"}},fill:{fgColor:darkBlue}});
+  XLSX.utils.book_append_sheet(wb, sWs, 'Summary');
+
+  // ── Rung sheets ──
+  RUNGS.forEach(rung => {
+    const rd = data.rungs[rung.num];
+    const rows = [
+      [`Rung ${rung.num}: ${rung.title}`, '', rung.subtitle, '', rung.salary, '', ''],
+      [`Their question: ${rung.question}`,'','','','','',''],
+      ['','','','','','',''],
+      ['Observable Behavior','1 Not Yet','2 Emerging','3 Consistent','4 Exemplary','Score','Notes']
+    ];
+    let total = 0;
+    rung.behaviors.forEach((b,i) => {
+      const s = rd.scores[i];
+      total += s||0;
+      const row = [b,'','','','', s||'', rd.notes[i]||''];
+      if(s) row[s] = '\u2713';
+      rows.push(row);
+    });
+    const max = rung.behaviors.length*4;
+    const pct = max>0?Math.round((total/max)*100):0;
+    rows.push(['','','','','','','']);
+    rows.push(['TOTAL SCORE','','','','',`${total} / ${max}`,`${pct}%`]);
+    rows.push(['','','','','','','']);
+    // Promotion section header
+    rows.push(['PROMOTION READINESS','','','','','','']);
+    // Promotion signal - text spans columns B-G
+    rows.push(['Promotion signal', rung.promotion,'','','','','']);
+    // Ready to promote with checkbox-style display
+    const promoVal = rd.promoStatus;
+    const notYet = promoVal==='not_yet'?'\u2611':'\u2610';
+    const onTrack = promoVal==='on_track'?'\u2611':'\u2610';
+    const ready = promoVal==='ready'?'\u2611':'\u2610';
+    rows.push(['Ready to promote?', `${notYet} Not yet`, '', `${onTrack} On track`, '', `${ready} Ready now`, '']);
+    rows.push(['','','','','','','']);
+    // 1:1 Notes section header
+    rows.push(['1:1 NOTES','','','','','','']);
+    rows.push([rd.rungNotes||'','','','','','','']);
+
+    const ws = XLSX.utils.aoa_to_sheet(rows);
+    ws['!cols'] = [{wch:42},{wch:11},{wch:11},{wch:13},{wch:13},{wch:10},{wch:30}];
+    // Merges: title, question, promotion signal text, notes
+    const promoHeaderRow = 4+rung.behaviors.length+3;
+    const promoSignalRow = promoHeaderRow+1;
+    const promoReadyRow = promoSignalRow+1;
+    const notesHeaderRow = promoReadyRow+2;
+    const notesRow = notesHeaderRow+1;
+    ws['!merges'] = [
+      {s:{r:0,c:0},e:{r:0,c:1}},
+      {s:{r:1,c:0},e:{r:1,c:6}},
+      {s:{r:promoHeaderRow,c:0},e:{r:promoHeaderRow,c:6}},
+      {s:{r:promoSignalRow,c:1},e:{r:promoSignalRow,c:6}},
+      {s:{r:notesHeaderRow,c:0},e:{r:notesHeaderRow,c:6}},
+      {s:{r:notesRow,c:0},e:{r:notesRow,c:6}},
+    ];
+
+    // Title row
+    sc(ws,'A1',titleStyle); sc(ws,'B1',titleStyle);
+    sc(ws,'C1',{font:{italic:true,color:{rgb:"FFFFFF"},sz:10},fill:{fgColor:darkBlue}});
+    sc(ws,'E1',{font:{bold:true,color:{rgb:"FFFFFF"},sz:11},fill:{fgColor:darkBlue},alignment:{horizontal:"right"}});
+    for(let c=0;c<7;c++) { const ref=XLSX.utils.encode_cell({r:0,c}); if(!ws[ref]) ws[ref]={v:'',t:'s'}; if(!ws[ref].s) ws[ref].s={fill:{fgColor:darkBlue}}; }
+    // Question row
+    sc(ws,'A2',subStyle);
+    // Header row
+    const hdrColors = [darkBlue, redBg, yellowBg, lightBlue, greenBg, darkBlue, darkBlue];
+    const hdrFonts = [{rgb:"FFFFFF"},{rgb:"000000"},{rgb:"000000"},{rgb:"000000"},{rgb:"000000"},{rgb:"FFFFFF"},{rgb:"FFFFFF"}];
+    for(let c=0;c<7;c++) {
+      sc(ws,XLSX.utils.encode_cell({r:3,c}),{
+        font:{bold:true,color:hdrFonts[c],sz:9},
+        fill:{fgColor:hdrColors[c]},
+        alignment:{horizontal:"center",vertical:"center",wrapText:true}
+      });
+    }
+    // Behavior rows
+    rung.behaviors.forEach((b,i) => {
+      const row = 4+i;
+      const bg = i%2===0?white:lightGray;
+      sc(ws,XLSX.utils.encode_cell({r:row,c:0}),{font:{sz:9},fill:{fgColor:bg},alignment:{wrapText:true,vertical:"center"}});
+      for(let c=1;c<=4;c++) {
+        const s = rd.scores[i];
+        const isChecked = s===c;
+        const checkColors = [null,redBg,yellowBg,lightBlue,greenBg];
+        sc(ws,XLSX.utils.encode_cell({r:row,c}),{
+          font:{sz:10,color:{rgb:isChecked?"1F3864":"CCCCCC"}},
+          fill:{fgColor: isChecked ? checkColors[c] : bg},
+          alignment:{horizontal:"center",vertical:"center"}
+        });
+      }
+      sc(ws,XLSX.utils.encode_cell({r:row,c:5}),{font:{bold:true,sz:10},fill:{fgColor:bg},alignment:{horizontal:"center",vertical:"center"}});
+      sc(ws,XLSX.utils.encode_cell({r:row,c:6}),{font:{sz:9,color:{rgb:"666666"}},fill:{fgColor:bg},alignment:{wrapText:true,vertical:"center"}});
+    });
+    // Total row
+    const tRow = 4+rung.behaviors.length+1;
+    for(let c=0;c<7;c++) sc(ws,XLSX.utils.encode_cell({r:tRow,c}),{font:{bold:true,color:{rgb:"FFFFFF"},sz:11},fill:{fgColor:medBlue},alignment:{horizontal:c>=5?"center":"left"}});
+
+    // Promotion header row - dark blue banner
+    for(let c=0;c<7;c++) sc(ws,XLSX.utils.encode_cell({r:promoHeaderRow,c}),{font:{bold:true,color:{rgb:"FFFFFF"},sz:10,},fill:{fgColor:darkBlue},alignment:{vertical:"center"}});
+    // Promotion signal label + text
+    sc(ws,XLSX.utils.encode_cell({r:promoSignalRow,c:0}),{font:{bold:true,sz:9,color:{rgb:"1F3864"}},fill:{fgColor:lightBlue},alignment:{vertical:"center"}});
+    for(let c=1;c<7;c++) sc(ws,XLSX.utils.encode_cell({r:promoSignalRow,c}),{font:{sz:9,color:{rgb:"333333"}},fill:{fgColor:lightBlue},alignment:{wrapText:true,vertical:"center"}});
+    // Ready to promote row
+    sc(ws,XLSX.utils.encode_cell({r:promoReadyRow,c:0}),{font:{bold:true,sz:9,color:{rgb:"1F3864"}},fill:{fgColor:gold},alignment:{vertical:"center"}});
+    sc(ws,XLSX.utils.encode_cell({r:promoReadyRow,c:1}),{font:{sz:10},fill:{fgColor:gold},alignment:{horizontal:"center",vertical:"center"}});
+    sc(ws,XLSX.utils.encode_cell({r:promoReadyRow,c:3}),{font:{sz:10},fill:{fgColor:gold},alignment:{horizontal:"center",vertical:"center"}});
+    sc(ws,XLSX.utils.encode_cell({r:promoReadyRow,c:5}),{font:{sz:10},fill:{fgColor:gold},alignment:{horizontal:"center",vertical:"center"}});
+    for(let c=0;c<7;c++) { const ref=XLSX.utils.encode_cell({r:promoReadyRow,c}); if(ws[ref]&&!ws[ref].s) ws[ref].s={fill:{fgColor:gold}}; else if(ws[ref]) ws[ref].s.fill={fgColor:gold}; }
+
+    // 1:1 Notes header - dark blue banner
+    for(let c=0;c<7;c++) sc(ws,XLSX.utils.encode_cell({r:notesHeaderRow,c}),{font:{bold:true,color:{rgb:"FFFFFF"},sz:10},fill:{fgColor:darkBlue},alignment:{vertical:"center"}});
+    // Notes content
+    for(let c=0;c<7;c++) sc(ws,XLSX.utils.encode_cell({r:notesRow,c}),{font:{sz:9,color:{rgb:"333333"}},fill:{fgColor:lightGray},alignment:{wrapText:true,vertical:"top"}});
+    // Set row height for notes
+    ws['!rows'] = ws['!rows'] || [];
+    ws['!rows'][notesRow] = {hpt:60};
+    ws['!rows'][promoSignalRow] = {hpt:45};
+
+    XLSX.utils.book_append_sheet(wb, ws, `Rung ${rung.num}`);
+  });
+
+  const engName = data.engineerName ? data.engineerName.replace(/\s+/g,'-').toLowerCase() : 'unnamed';
+  const date = data.reviewDate || 'undated';
+  XLSX.writeFile(wb, `engineering-ladder-${engName}-${date}.xlsx`);
+}
+
+function exportData() {
+  const data = gatherData();
+  const name = data.engineerName ? data.engineerName.replace(/\s+/g, '-').toLowerCase() : 'unnamed';
+  const date = data.reviewDate || 'undated';
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `engineering-ladder-${name}-${date}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importData(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = JSON.parse(e.target.result);
+      document.getElementById('engineerName').value = data.engineerName || '';
+      document.getElementById('reviewDate').value = data.reviewDate || '';
+      RUNGS.forEach(rung => {
+        const rd = data.rungs && data.rungs[rung.num];
+        if (!rd) return;
+        rd.scores.forEach((s, i) => {
+          if (s !== null) {
+            const radio = document.querySelector(`input[name="rung${rung.num}_b${i}"][value="${s}"]`);
+            if (radio) radio.checked = true;
+          }
+        });
+        if (rd.notes) {
+          rd.notes.forEach((n, i) => {
+            const el = document.querySelector(`.note-data[data-rung="${rung.num}"][data-behavior="${i}"]`);
+            if (el) el.value = n;
+            updateNotePreview(rung.num, i, n);
+          });
+        }
+        if (rd.promoStatus) {
+          const radio = document.querySelector(`input[name="promo${rung.num}"][value="${rd.promoStatus}"]`);
+          if (radio) radio.checked = true;
+        }
+        const notesEl = document.getElementById(`rungNotes${rung.num}`);
+        if (notesEl && rd.rungNotes) {
+          notesEl.value = rd.rungNotes;
+          updateRungNotePreview(rung.num, rd.rungNotes);
+        }
+      });
+      updateScores();
+    } catch (err) {
+      alert('Invalid JSON file');
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+function resetAll() {
+  if (!confirm('Reset all scores and notes? This cannot be undone.')) return;
+  document.getElementById('engineerName').value = '';
+  document.getElementById('reviewDate').value = '';
+  document.querySelectorAll('.score-radio').forEach(r => r.checked = false);
+  document.querySelectorAll('.note-data, input[id^="rungNotes"]').forEach(el => el.value = '');
+  document.querySelectorAll('.note-preview').forEach(p => {
+    p.classList.remove('has-content');
+    const span = p.querySelector('.note-text');
+    if (span) span.textContent = p.classList.contains('rung-note-preview') ? 'Add 1:1 notes...' : 'Add note';
+  });
+  document.querySelectorAll('input[name^="promo"]').forEach(r => r.checked = false);
+  updateScores();
+}
+
+// ── Note editor ──
+let currentNote = { type: null, rung: null, behavior: null };
+
+function openNote(rung, behavior) {
+  currentNote = { type: 'behavior', rung, behavior };
+  const hidden = document.querySelector(`.note-data[data-rung="${rung}"][data-behavior="${behavior}"]`);
+  const behaviorText = RUNGS[rung - 1].behaviors[behavior];
+  document.getElementById('noteEditorTitle').textContent = `Note — Rung ${rung}`;
+  document.getElementById('noteEditorContext').textContent = behaviorText;
+  document.getElementById('noteEditorText').value = hidden ? hidden.value : '';
+  document.getElementById('noteOverlay').classList.add('open');
+  setTimeout(() => document.getElementById('noteEditorText').focus(), 50);
+}
+
+function openRungNote(rung) {
+  currentNote = { type: 'rung', rung, behavior: null };
+  document.getElementById('noteEditorTitle').textContent = `1:1 Notes — Rung ${rung}: ${RUNGS[rung-1].title}`;
+  document.getElementById('noteEditorContext').textContent = RUNGS[rung-1].question;
+  const hidden = document.getElementById(`rungNotes${rung}`);
+  document.getElementById('noteEditorText').value = hidden ? hidden.value : '';
+  document.getElementById('noteOverlay').classList.add('open');
+  setTimeout(() => document.getElementById('noteEditorText').focus(), 50);
+}
+
+function saveNote() {
+  const text = document.getElementById('noteEditorText').value.trim();
+  if (currentNote.type === 'behavior') {
+    const hidden = document.querySelector(`.note-data[data-rung="${currentNote.rung}"][data-behavior="${currentNote.behavior}"]`);
+    if (hidden) hidden.value = text;
+    updateNotePreview(currentNote.rung, currentNote.behavior, text);
+  } else if (currentNote.type === 'rung') {
+    const hidden = document.getElementById(`rungNotes${currentNote.rung}`);
+    if (hidden) hidden.value = text;
+    updateRungNotePreview(currentNote.rung, text);
+  }
+  closeNote();
+}
+
+function clearNote() {
+  document.getElementById('noteEditorText').value = '';
+}
+
+function closeNote() {
+  document.getElementById('noteOverlay').classList.remove('open');
+  currentNote = { type: null, rung: null, behavior: null };
+}
+
+function updateNotePreview(rung, behavior, text) {
+  const preview = document.getElementById(`notePreview_${rung}_${behavior}`);
+  if (!preview) return;
+  const span = preview.querySelector('.note-text');
+  if (text) {
+    span.textContent = text;
+    preview.classList.add('has-content');
+  } else {
+    span.textContent = 'Add note';
+    preview.classList.remove('has-content');
+  }
+}
+
+function updateRungNotePreview(rung, text) {
+  const preview = document.getElementById(`rungNotePreview_${rung}`);
+  if (!preview) return;
+  const span = preview.querySelector('.note-text');
+  if (text) {
+    span.textContent = text;
+    preview.classList.add('has-content');
+  } else {
+    span.textContent = 'Add 1:1 notes...';
+    preview.classList.remove('has-content');
+  }
+}
+
+// Close on Escape
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeNote(); });
+
+// Measure engineer bar height and set CSS variable
+function measureBar() {
+  const bar = document.querySelector('.engineer-bar');
+  const h = bar.offsetHeight;
+  document.documentElement.style.setProperty('--bar-height', h + 'px');
+}
+measureBar();
+window.addEventListener('resize', measureBar);
+
+// Highlight active ladder rung on scroll (50% viewport visibility) + show/hide ladder
+function updateLadderNav() {
+  const nav = document.getElementById('ladderNav');
+  const hero = document.querySelector('.hero');
+  const heroBottom = hero ? hero.getBoundingClientRect().bottom : -1;
+  nav.classList.toggle('visible', heroBottom < 0);
+
+  const links = document.querySelectorAll('.ladder-rung-link');
+  const mid = window.innerHeight / 2;
+  let current = '';
+  RUNGS.forEach(r => {
+    const el = document.getElementById(`rung${r.num}`);
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    if (rect.top <= mid && rect.bottom >= mid) current = `rung${r.num}`;
+  });
+  if (!current) {
+    RUNGS.forEach(r => {
+      const el = document.getElementById(`rung${r.num}`);
+      if (el && el.getBoundingClientRect().top <= 150) current = `rung${r.num}`;
+    });
+  }
+  links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === `#${current}`));
+}
+window.addEventListener('scroll', updateLadderNav);
+
+// Smooth scroll for ladder links
+document.addEventListener('click', e => {
+  const link = e.target.closest('.ladder-rung-link');
+  if (link) {
+    e.preventDefault();
+    document.querySelector(link.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+  }
+});
+
+// Init
+renderRungs();
+updateScores();
+</script>
+</body>
+</html>
