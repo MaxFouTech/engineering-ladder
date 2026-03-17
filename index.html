@@ -436,18 +436,16 @@
     transition: background 0.15s;
   }
   .ctx-acc-header:hover { background: rgba(31,56,100,0.08); }
-  .ctx-acc-label {
-    font-size: 0.7rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    padding: 0.15rem 0.5rem;
-    border-radius: 3px;
-    white-space: nowrap;
+  .ctx-acc-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--med-blue);
   }
-  .ctx-label-excels { color: var(--success); background: #E8F5EC; }
-  .ctx-label-struggling { color: var(--warning); background: #FEF6E8; }
-  .ctx-label-ready { color: var(--med-blue); background: #E8EEF8; }
+  .ctx-acc-hint {
+    font-weight: 400;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+  }
   .ctx-acc-arrow {
     margin-left: auto;
     font-size: 0.8rem;
@@ -698,6 +696,16 @@
     color: var(--dark-blue);
     font-weight: 500;
   }
+  .rung-note-preview .note-text {
+    display: inline !important;
+    white-space: nowrap;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+  }
+  .rung-note-preview.has-content .note-text {
+    color: var(--dark-blue);
+    font-weight: 500;
+  }
   .note-preview.has-content .note-icon {
     align-self: flex-start;
     margin-top: 0.1rem;
@@ -843,8 +851,6 @@
     color: var(--text-muted);
     margin-bottom: 1rem;
     line-height: 1.6;
-    padding-bottom: 0.8rem;
-    border-bottom: 1px solid #E5E7EB;
   }
   .promotion-signal strong {
     color: var(--dark-blue);
@@ -873,6 +879,7 @@
     padding: 0.4rem 1rem;
     border: 2px solid #D1D5DB;
     border-radius: 20px;
+    background: white;
     transition: all 0.2s;
     user-select: none;
   }
@@ -1510,11 +1517,9 @@ function renderRungs() {
           </div>
           <div class="rung-form">
             ${rung.excels ? `
-            <div class="rung-context-accordion">
+            <div class="rung-context-accordion${rung.num === 1 ? ' open' : ''}">
               <div class="ctx-acc-header" onclick="this.parentElement.classList.toggle('open')">
-                <span class="ctx-acc-label ctx-label-excels">Excels When</span>
-                <span class="ctx-acc-label ctx-label-struggling">Struggling When</span>
-                <span class="ctx-acc-label ctx-label-ready">Ready When</span>
+                <span class="ctx-acc-title">Show me the performance signals of ${rung.title.replace('The ','')} <span class="ctx-acc-hint">(where they excel, where they struggle, and when they are ready to move up)</span></span>
                 <span class="ctx-acc-arrow">&#9662;</span>
               </div>
               <div class="ctx-acc-body">
@@ -1579,7 +1584,7 @@ function renderRungs() {
                 <div class="notes-section">
                   <div class="note-preview rung-note-preview" onclick="openRungNote(${rung.num})" id="rungNotePreview_${rung.num}" style="padding:0.6rem 0.8rem;border:1px solid #D1D5DB;border-radius:8px;background:white;">
                     <svg class="note-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M11.5 1.5l3 3L5 14H2v-3L11.5 1.5z"/></svg>
-                    <span class="note-text" style="font-size:0.8rem">Add 1:1 notes...</span>
+                    <span class="note-text" style="font-size:0.8rem">1:1 Notes</span>
                   </div>
                   <input type="hidden" id="rungNotes${rung.num}" data-rung="${rung.num}" value="">
                 </div>
@@ -1993,7 +1998,7 @@ function resetAll() {
   document.querySelectorAll('.note-preview').forEach(p => {
     p.classList.remove('has-content');
     const span = p.querySelector('.note-text');
-    if (span) span.textContent = p.classList.contains('rung-note-preview') ? 'Add 1:1 notes...' : '';
+    if (span) span.textContent = p.classList.contains('rung-note-preview') ? '1:1 Notes' : '';
   });
   document.querySelectorAll('input[name^="promo"]').forEach(r => r.checked = false);
   updateScores();
@@ -2067,7 +2072,7 @@ function updateRungNotePreview(rung, text) {
     span.textContent = text;
     preview.classList.add('has-content');
   } else {
-    span.textContent = 'Add 1:1 notes...';
+    span.textContent = '1:1 Notes';
     preview.classList.remove('has-content');
   }
 }
