@@ -55,6 +55,7 @@
   }
   .hero-bg {
     position: absolute; inset: -20px;
+    background-color: #faf6e4;
     opacity: 0.5;
     mask-image: radial-gradient(ellipse 95% 92% at center, black 85%, transparent 100%);
     -webkit-mask-image: radial-gradient(ellipse 95% 92% at center, black 85%, transparent 100%);
@@ -65,6 +66,11 @@
     height: 100%;
     object-fit: contain;
     object-position: center;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+  .hero-bg img.loaded {
+    opacity: 1;
   }
   .hero-content {
     position: relative; z-index: 2;
@@ -80,14 +86,16 @@
     letter-spacing: -0.02em;
   }
   .hero .subtitle {
+    font-family: 'Playfair Display', serif;
     font-size: 1.15rem;
     color: rgba(255,255,255,0.85);
-    font-weight: 300;
+    font-weight: 400;
     margin-bottom: 1.5rem;
   }
   .hero .byline {
+    font-family: 'Playfair Display', serif;
     font-size: 0.85rem;
-    color: rgba(255,255,255,0.5);
+    color: rgba(255,255,255,0.75);
     font-style: italic;
   }
   .hero-steps {
@@ -108,16 +116,19 @@
     width: 38px;
     height: 38px;
     border-radius: 50%;
-    border: 2px solid rgba(255,255,255,0.3);
+    border: 2px solid rgba(255,255,255,0.5);
     display: flex;
     align-items: center;
     justify-content: center;
+    font-family: 'Inter', -apple-system, sans-serif;
     font-weight: 700;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     color: white;
-    background: rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.35);
+    line-height: 1;
   }
   .hero-step-label {
+    font-family: 'Playfair Display', serif;
     font-size: 0.8rem;
     color: rgba(255,255,255,0.7);
     font-weight: 500;
@@ -178,7 +189,7 @@
 
   /* ── MAIN CONTENT ── */
   .main-content {
-    padding-bottom: 2rem;
+    padding-bottom: 0;
   }
 
   /* ── RUNG SECTION ── */
@@ -187,13 +198,10 @@
     margin-bottom: 0;
     scroll-margin-top: 0;
   }
-  .rung-section:last-child {
-    margin-bottom: 12rem;
-  }
 
   .rung-header {
     border-radius: 0;
-    padding: 0.6rem 2rem;
+    padding: 0.6rem 1rem;
     color: white;
     display: flex;
     align-items: center;
@@ -225,6 +233,40 @@
     opacity: 0.8;
     font-style: italic;
   }
+  .rung-header-nav {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
+    flex-shrink: 0;
+  }
+  .rung-header-nav-btn {
+    background: rgba(255,255,255,0.12);
+    border: none;
+    color: white;
+    width: 32px;
+    height: 18px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 0.55rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+    padding: 0;
+    line-height: 1;
+  }
+  .rung-header-nav-btn:hover { background: rgba(255,255,255,0.25); }
+  .rung-header-nav-count {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: rgba(255,255,255,0.5);
+    line-height: 1;
+    text-align: center;
+    width: 32px;
+  }
+  .rung-header-nav-btn:disabled { opacity: 0.2; cursor: default; }
+  .rung-header-nav-btn:disabled:hover { background: rgba(255,255,255,0.12); }
   .rung-title-wrap {
     position: relative;
     cursor: pointer;
@@ -936,7 +978,7 @@
   /* ── RESULTS SECTION ── */
   .results-header {
     background: var(--accent-gold);
-    padding: 0.6rem 2rem;
+    padding: 0.6rem 1rem;
     color: white;
     display: flex;
     align-items: center;
@@ -957,6 +999,7 @@
     color: white;
     padding: 0;
     scroll-margin-top: 0;
+    min-height: 100vh;
   }
   .results-section .results-inner {
     padding: 3rem 2rem;
@@ -1123,19 +1166,19 @@
   .results-io-field input {
     width: 100%;
     padding: 0.5rem 0.7rem;
-    border: 1px solid rgba(255,255,255,0.2);
+    border: 1px solid #D1D5DB;
     border-radius: 6px;
-    background: rgba(255,255,255,0.08);
-    color: white;
+    background: white;
+    color: var(--text-dark);
     font-size: 0.85rem;
     font-family: inherit;
     box-sizing: border-box;
   }
-  .results-io-field input::placeholder { color: rgba(255,255,255,0.35); }
+  .results-io-field input::placeholder { color: var(--text-muted); }
   .results-io-field input:focus {
     outline: none;
-    border-color: rgba(255,255,255,0.4);
-    background: rgba(255,255,255,0.12);
+    border-color: var(--med-blue);
+    box-shadow: 0 0 0 3px rgba(46,117,182,0.15);
   }
   .results-actions {
     display: flex;
@@ -1240,7 +1283,7 @@
 
 <!-- ── HERO ── -->
 <section class="hero">
-  <div class="hero-bg"><img src="images/hero-ladder-path.webp" alt="" fetchpriority="high" width="1024" height="1024"></div>
+  <div class="hero-bg"><img src="images/hero-ladder-path.webp" alt="" fetchpriority="high" width="1024" height="1024" onload="this.classList.add('loaded')"></div>
   <div class="hero-content">
     <h1>The Engineering Ladder</h1>
     <p class="subtitle">A performance ladder that measures judgment, not just output</p>
@@ -1299,6 +1342,10 @@
 <!-- ── RESULTS SECTION ── -->
 <section class="results-section" id="resultsSection">
   <div class="results-header" id="resultsHeader">
+    <div class="rung-header-nav">
+      <button class="rung-header-nav-btn" onclick="navigateToRung(event,'rung5')">&#9650;</button>
+      <button class="rung-header-nav-btn" disabled>&#9660;</button>
+    </div>
     <div class="rung-title-wrap" onclick="toggleRungMenu(this)">
       <h2>Final Report <span class="rung-menu-arrow">&#9662;</span></h2>
       <div class="rung-menu" style="background:var(--accent-gold)" id="resultsMenu"></div>
@@ -1477,6 +1524,11 @@ function renderRungs() {
     return `
     <section class="rung-section" id="rung${rung.num}">
       <div class="rung-header" style="background:${rung.color}">
+        <div class="rung-header-nav">
+          <button class="rung-header-nav-btn" onclick="navigateToRung(event,'${rung.num > 1 ? 'rung'+(rung.num-1) : ''}')" ${rung.num === 1 ? 'disabled' : ''}>&#9650;</button>
+          <span class="rung-header-nav-count">${rung.num}/5</span>
+          <button class="rung-header-nav-btn" onclick="navigateToRung(event,'${rung.num < 5 ? 'rung'+(rung.num+1) : 'resultsSection'}')">&#9660;</button>
+        </div>
         <div class="rung-title-wrap" onclick="toggleRungMenu(this)">
           <h2>Rung ${rung.num}: ${rung.title} <span class="rung-menu-arrow">&#9662;</span></h2>
           <div class="rung-menu" style="background:${rung.color}">
@@ -1492,7 +1544,7 @@ function renderRungs() {
       <div class="rung-body">
         <div class="rung-columns">
           <div class="rung-left-col">
-            <div class="rung-illustration" style="cursor:pointer" onclick="openImgLightbox(${rung.num})">
+            <div class="rung-illustration">
               <img src="${rung.illustration}" alt="${rung.title} illustration" loading="lazy" width="336" height="500">
               ${rung.video ? `<video src="${rung.video}" muted playsinline preload="none"></video>` : ''}
             </div>
