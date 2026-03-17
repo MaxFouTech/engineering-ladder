@@ -5,6 +5,7 @@
 <link rel="icon" href="images/favicon.ico">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Engineering Ladder Assessment</title>
+<link rel="preload" href="images/hero-ladder-path.webp" as="image" fetchpriority="high">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
@@ -54,11 +55,16 @@
   }
   .hero-bg {
     position: absolute; inset: -20px;
-    background: url('images/hero-ladder-path.webp') center/contain no-repeat;
-    background-color: #faf6e4;
     opacity: 0.5;
     mask-image: radial-gradient(ellipse 95% 92% at center, black 85%, transparent 100%);
     -webkit-mask-image: radial-gradient(ellipse 95% 92% at center, black 85%, transparent 100%);
+    overflow: hidden;
+  }
+  .hero-bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
   }
   .hero-content {
     position: relative; z-index: 2;
@@ -166,27 +172,6 @@
   @keyframes menuSlideUp {
     from { opacity: 0; transform: translateY(12px); }
     to { opacity: 1; transform: translateY(0); }
-  }
-  .btn-music {
-    background: white;
-    color: var(--dark-blue);
-    border: 2px solid var(--dark-blue);
-    width: 36px;
-    padding: 0.5rem 0;
-    font-size: 1rem;
-    opacity: 0.5;
-    transition: all 0.2s;
-  }
-  .btn-music:hover { opacity: 0.8; background: var(--light-blue); }
-  .btn-music.playing {
-    opacity: 1;
-    background: var(--dark-blue);
-    color: white;
-    animation: musicPulse 1.5s ease-in-out infinite;
-  }
-  @keyframes musicPulse {
-    0%, 100% { box-shadow: none; }
-    50% { box-shadow: 0 0 8px rgba(46,117,182,0.4); }
   }
 
 
@@ -1255,7 +1240,7 @@
 
 <!-- ── HERO ── -->
 <section class="hero">
-  <div class="hero-bg"></div>
+  <div class="hero-bg"><img src="images/hero-ladder-path.webp" alt="" fetchpriority="high" width="1024" height="1024"></div>
   <div class="hero-content">
     <h1>The Engineering Ladder</h1>
     <p class="subtitle">A performance ladder that measures judgment, not just output</p>
@@ -1282,8 +1267,6 @@
 
 <!-- Hidden elements -->
 <input type="file" id="importFile" accept=".json" onchange="importData(event)" style="display:none">
-<audio id="musicA" src="images/neon_horizon_drive.mp4" preload="auto"></audio>
-<audio id="musicB" src="images/neon_horizon_drive.mp4" preload="auto"></audio>
 
 <!-- ── MAIN CONTENT ── -->
 <div class="main-content" id="mainContent"></div>
@@ -1510,7 +1493,7 @@ function renderRungs() {
         <div class="rung-columns">
           <div class="rung-left-col">
             <div class="rung-illustration" style="cursor:pointer" onclick="openImgLightbox(${rung.num})">
-              <img src="${rung.illustration}" alt="${rung.title} illustration" loading="lazy">
+              <img src="${rung.illustration}" alt="${rung.title} illustration" loading="lazy" width="336" height="500">
               ${rung.video ? `<video src="${rung.video}" muted playsinline preload="none"></video>` : ''}
             </div>
           </div>
@@ -2134,67 +2117,6 @@ function closeImgLightbox() {
 // Init
 renderRungs();
 updateScores();
-
-// Focus music — two-element crossfade loop
-const musicA = document.getElementById('musicA');
-const musicB = document.getElementById('musicB');
-const musicBtn = document.getElementById('musicBtn');
-const LOOP_START = 11.22;
-const CROSSFADE_AT = 20.85;
-const FADE_DURATION = 1.0;
-let musicPlaying = false;
-let activePlaying = null;
-let fadeInterval = null;
-
-function scheduleNext(current, next) {
-  if (fadeInterval) clearInterval(fadeInterval);
-  fadeInterval = setInterval(() => {
-    if (!musicPlaying) { clearInterval(fadeInterval); return; }
-    if (current.currentTime >= CROSSFADE_AT) {
-      clearInterval(fadeInterval);
-      // Start next from loop point
-      next.currentTime = LOOP_START;
-      next.volume = 0;
-      next.play();
-      // Crossfade
-      const steps = 20;
-      let step = 0;
-      const xfade = setInterval(() => {
-        step++;
-        const t = step / steps;
-        current.volume = Math.max(0, 1 - t);
-        next.volume = Math.min(1, t);
-        if (step >= steps) {
-          clearInterval(xfade);
-          current.pause();
-          current.volume = 1;
-          activePlaying = next;
-          scheduleNext(next, current);
-        }
-      }, (FADE_DURATION * 1000) / steps);
-    }
-  }, 50);
-}
-
-function toggleMusic() {
-  if (!musicPlaying) {
-    musicPlaying = true;
-    musicA.currentTime = 0;
-    musicA.volume = 1;
-    musicA.play();
-    activePlaying = musicA;
-    musicBtn.classList.add('playing');
-    scheduleNext(musicA, musicB);
-  } else {
-    musicPlaying = false;
-    musicA.pause();
-    musicB.pause();
-    musicA.volume = 1;
-    musicB.volume = 1;
-    if (fadeInterval) clearInterval(fadeInterval);
-    musicBtn.classList.remove('playing');
-  }
-}
 
 // Illustration video hover play/pause — finish loop before hiding
 document.querySelectorAll('.rung-illustration').forEach(el => {
