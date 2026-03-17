@@ -5,8 +5,10 @@
 <link rel="icon" href="images/favicon.ico">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Engineering Ladder Assessment</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap');
 
   :root {
     --dark-blue: #1F3864;
@@ -216,9 +218,6 @@
     z-index: 15;
     box-shadow: 0 2px 8px rgba(0,0,0,0.15);
     transition: border-radius 0.2s;
-  }
-  .rung-header.is-stuck {
-    border-radius: 0;
   }
   .rung-header h2 {
     font-family: 'Playfair Display', serif;
@@ -1361,7 +1360,7 @@
   </div>
 </section>
 
-<script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
 <script>
 const RUNGS = [
   {
@@ -1511,8 +1510,8 @@ function renderRungs() {
         <div class="rung-columns">
           <div class="rung-left-col">
             <div class="rung-illustration" style="cursor:pointer" onclick="openImgLightbox(${rung.num})">
-              <img src="${rung.illustration}" alt="${rung.title} illustration">
-              ${rung.video ? `<video src="${rung.video}" muted playsinline preload="metadata"></video>` : ''}
+              <img src="${rung.illustration}" alt="${rung.title} illustration" loading="lazy">
+              ${rung.video ? `<video src="${rung.video}" muted playsinline preload="none"></video>` : ''}
             </div>
           </div>
           <div class="rung-form">
@@ -2119,14 +2118,6 @@ function closeImgLightbox() {
 
 
 
-// Sticky rung header: toggle border-radius when stuck
-function updateStickyHeaders() {
-  document.querySelectorAll('.rung-header').forEach(h => {
-    const rect = h.getBoundingClientRect();
-    h.classList.toggle('is-stuck', Math.abs(rect.top) < 2);
-  });
-}
-window.addEventListener('scroll', updateStickyHeaders, { passive: true });
 
 // Init
 renderRungs();
