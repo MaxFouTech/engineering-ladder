@@ -81,6 +81,73 @@
     color: rgba(255,255,255,0.5);
     font-style: italic;
   }
+  .hero-steps {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    margin-top: 2.5rem;
+  }
+  .hero-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 120px;
+  }
+  .hero-step-num {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: white;
+    background: rgba(255,255,255,0.08);
+  }
+  .hero-step-label {
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.7);
+    font-weight: 500;
+    text-align: center;
+    line-height: 1.3;
+  }
+  .hero-step-connector {
+    width: 50px;
+    height: 1px;
+    background: rgba(255,255,255,0.2);
+    margin-bottom: 1.6rem;
+  }
+  .hero-cta {
+    margin-top: 2rem;
+    display: inline-block;
+    padding: 0.7rem 2rem;
+    background: var(--accent-gold);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+    letter-spacing: 0.02em;
+    box-shadow: 0 4px 16px rgba(184,134,11,0.3);
+  }
+  .hero-cta:hover { background: #9A7209; transform: translateY(-1px); }
+  .hero-cta-chevron {
+    display: inline-block;
+    margin-left: 0.3rem;
+    font-size: 0.7em;
+    animation: scrollBounce 2s ease-in-out infinite;
+  }
+  @keyframes scrollBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(3px); }
+  }
 
   .btn {
     padding: 0.5rem 1rem;
@@ -128,9 +195,9 @@
 
   /* ── RUNG SECTION ── */
   .rung-section {
-    margin-top: 6rem;
+    margin-top: 0;
     margin-bottom: 0;
-    scroll-margin-top: 80px;
+    scroll-margin-top: 0;
   }
   .rung-section:last-child {
     margin-bottom: 12rem;
@@ -173,36 +240,77 @@
     opacity: 0.8;
     font-style: italic;
   }
-  .header-score {
-    margin-left: auto;
+  .rung-title-wrap {
+    position: relative;
+    cursor: pointer;
+    padding: 0.4rem 0.6rem;
+    margin: -0.4rem -0.6rem;
+    border-radius: 6px;
+  }
+  .rung-title-wrap:hover {
+    background: rgba(255,255,255,0.08);
+  }
+  .rung-title-wrap h2 {
+    display: flex;
+    align-items: baseline;
+    gap: 0.4rem;
+  }
+  .rung-menu-arrow {
+    font-size: 0.7em;
+    opacity: 0.5;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  .rung-title-wrap:hover .rung-menu-arrow { opacity: 0.9; }
+  .rung-menu.open + .rung-menu-arrow,
+  .rung-title-wrap:has(.rung-menu.open) .rung-menu-arrow { transform: rotate(180deg); opacity: 0.9; }
+  .rung-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 0;
+    background: var(--dark-blue);
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.3);
+    width: 100%;
+    z-index: 50;
+    overflow: hidden;
+    transform-origin: top center;
+    transform: scaleY(0);
+    opacity: 0;
+    transition: transform 0.2s ease, opacity 0.15s ease;
+    pointer-events: none;
+  }
+  .rung-menu.open {
+    transform: scaleY(1);
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .rung-menu-item {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    padding: 0.4rem 0.8rem;
+    font-family: 'Playfair Display', serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: rgba(255,255,255,0.7);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .rung-menu-item:hover { background: rgba(255,255,255,0.1); color: white; }
+  .rung-menu-item.active { background: rgba(255,255,255,0.15); color: white; font-weight: 700; }
+  .rung-menu-num {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-family: sans-serif;
+    font-size: 0.65rem;
     font-weight: 700;
-    font-size: 0.85rem;
-    background: rgba(255,255,255,0.15);
-    padding: 0.3rem 0.8rem 0.3rem 1rem;
-    border-radius: 20px;
-  }
-  .header-score-val {
-    font-size: 1.1rem;
-  }
-  .header-score-pct {
-    opacity: 0.8;
-    font-size: 0.85rem;
-  }
-  .header-score-bar {
-    width: 60px;
-    height: 6px;
-    background: rgba(255,255,255,0.2);
-    border-radius: 3px;
-    overflow: hidden;
-  }
-  .header-score-bar-fill {
-    height: 100%;
-    border-radius: 3px;
-    background: white;
-    transition: width 0.4s ease;
+    flex-shrink: 0;
   }
 
 
@@ -214,7 +322,7 @@
 
   .rung-columns {
     display: grid;
-    grid-template-columns: 500px 1fr;
+    grid-template-columns: 380px 1fr;
     gap: 0;
   }
   .rung-left-col {
@@ -233,16 +341,12 @@
     position: sticky;
     top: calc(0px + 52px);
     align-self: start;
-    max-height: calc(100vh - 52px - 72px);
+    max-height: calc(100vh - 52px);
     overflow: hidden;
-  }
-  .rung-layered {
-    max-height: calc(100vh - 52px - 72px - 16px);
   }
   .rung-illustration img, .rung-infographic img {
     width: 100%;
-    max-width: 480px;
-    max-height: calc(100vh - 52px - 72px - 16px);
+    max-width: 336px;
     object-fit: cover;
     -webkit-mask-image: linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%),
                         linear-gradient(to bottom, transparent 0%, black 6%, black 94%, transparent 100%);
@@ -253,7 +357,7 @@
   }
   .rung-illustration video {
     width: 100%;
-    max-width: 480px;
+    max-width: 336px;
     object-fit: cover;
     -webkit-mask-image: linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%),
                         linear-gradient(to bottom, transparent 0%, black 6%, black 94%, transparent 100%);
@@ -316,10 +420,54 @@
 
 
   /* ── INFOGRAPHIC CONTEXT BLOCKS ── */
-  .rung-context-row {
+  .rung-context-accordion {
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid rgba(31,56,100,0.1);
+  }
+  .ctx-acc-header {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.8rem;
+    background: rgba(31,56,100,0.04);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .ctx-acc-header:hover { background: rgba(31,56,100,0.08); }
+  .ctx-acc-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 0.15rem 0.5rem;
+    border-radius: 3px;
+    white-space: nowrap;
+  }
+  .ctx-label-excels { color: var(--success); background: #E8F5EC; }
+  .ctx-label-struggling { color: var(--warning); background: #FEF6E8; }
+  .ctx-label-ready { color: var(--med-blue); background: #E8EEF8; }
+  .ctx-acc-arrow {
+    margin-left: auto;
+    font-size: 0.8rem;
+    color: var(--dark-blue);
+    opacity: 0.4;
+    transition: transform 0.25s;
+  }
+  .rung-context-accordion.open .ctx-acc-arrow { transform: rotate(180deg); }
+  .ctx-acc-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+  .rung-context-accordion.open .ctx-acc-body {
+    max-height: 800px;
+  }
+  .ctx-acc-body .rung-context-row {
     display: flex;
     gap: 0.8rem;
-    margin-bottom: 1.2rem;
+    padding: 0.8rem 1rem;
   }
   .rung-context-block {
     flex: 1;
@@ -409,7 +557,11 @@
     text-align: center;
     border-bottom: 2px solid var(--light-blue);
     color: var(--dark-blue);
+    position: sticky;
+    top: 64px;
+    z-index: 10;
     background: var(--warm-cream);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.06);
   }
   .behavior-table thead th:first-child {
     text-align: left;
@@ -457,6 +609,7 @@
     height: 36px;
     border: 2px solid #D1D5DB;
     border-radius: 50%;
+    background: white;
     cursor: pointer;
     transition: all 0.2s;
     position: relative;
@@ -522,11 +675,12 @@
   .note-preview .note-icon {
     width: 16px; height: 16px;
     flex-shrink: 0;
-    opacity: 0.3;
+    color: var(--dark-blue);
+    opacity: 0.5;
     transition: opacity 0.15s;
   }
-  .note-preview:hover .note-icon { opacity: 0.6; }
-  .note-preview.has-content .note-icon { opacity: 0.7; color: var(--med-blue); }
+  .note-preview:hover .note-icon { opacity: 0.8; }
+  .note-preview.has-content .note-icon { opacity: 1; color: var(--dark-blue); }
   .note-preview .note-text {
     font-size: 0.7rem;
     color: var(--text-muted);
@@ -788,9 +942,31 @@
   }
 
   /* ── RESULTS SECTION ── */
+  .results-header {
+    background: var(--accent-gold);
+    padding: 0.6rem 2rem;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+    position: sticky;
+    top: 0;
+    z-index: 15;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+  .results-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    letter-spacing: -0.01em;
+  }
   .results-section {
     background: var(--dark-blue);
     color: white;
+    padding: 0;
+    scroll-margin-top: 0;
+  }
+  .results-section .results-inner {
     padding: 3rem 2rem;
   }
   .results-inner {
@@ -1077,6 +1253,23 @@
     <h1>The Engineering Ladder</h1>
     <p class="subtitle">A performance ladder that measures judgment, not just output</p>
     <p class="byline">Based on <a href="https://ctosub.com/p/the-ctos-new-engineering-ladder?utm_campaign=post" target="_blank" style="color:rgba(255,255,255,0.7);text-decoration:underline">"The CTO's New Engineering Ladder"</a> by Etienne de Bruin, March 2026</p>
+    <div class="hero-steps">
+      <div class="hero-step">
+        <div class="hero-step-num">1</div>
+        <span class="hero-step-label">Explore<br>5 Rungs</span>
+      </div>
+      <div class="hero-step-connector"></div>
+      <div class="hero-step">
+        <div class="hero-step-num">2</div>
+        <span class="hero-step-label">Score<br>Behaviors</span>
+      </div>
+      <div class="hero-step-connector"></div>
+      <div class="hero-step">
+        <div class="hero-step-num">3</div>
+        <span class="hero-step-label">Review<br>Results</span>
+      </div>
+    </div>
+    <button class="hero-cta" onclick="document.getElementById('rung1').scrollIntoView({behavior:'smooth'})">Begin Assessment <span class="hero-cta-chevron">&#9662;</span></button>
   </div>
 </section>
 
@@ -1115,12 +1308,20 @@
 
 <!-- ── RESULTS SECTION ── -->
 <section class="results-section" id="resultsSection">
+  <div class="results-header" id="resultsHeader">
+    <div class="rung-title-wrap" onclick="toggleRungMenu(this)">
+      <h2>Final Report <span class="rung-menu-arrow">&#9662;</span></h2>
+      <div class="rung-menu" style="background:var(--accent-gold)" id="resultsMenu"></div>
+    </div>
+    <div class="rung-header-sub">
+      <span class="formerly">Assessment summary &amp; export</span>
+    </div>
+  </div>
   <div class="results-inner">
     <div class="results-left">
       <div class="results-level-img" id="resultsLevelImg"></div>
     </div>
     <div class="results-right">
-      <h2 class="results-title">Assessment Results</h2>
       <div class="results-level" id="finalLevel">
         <div class="fl-label">Final Rung Level</div>
         <div class="fl-name">Not yet assessed</div>
@@ -1287,42 +1488,53 @@ function renderRungs() {
     return `
     <section class="rung-section" id="rung${rung.num}">
       <div class="rung-header" style="background:${rung.color}">
-        <h2>Rung ${rung.num}: ${rung.title}</h2>
+        <div class="rung-title-wrap" onclick="toggleRungMenu(this)">
+          <h2>Rung ${rung.num}: ${rung.title} <span class="rung-menu-arrow">&#9662;</span></h2>
+          <div class="rung-menu" style="background:${rung.color}">
+            ${RUNGS.map(r => `<div class="rung-menu-item ${r.num === rung.num ? 'active' : ''}" onclick="navigateToRung(event,'rung${r.num}')"><span class="rung-menu-num" style="background:${r.color}">${r.num}</span>Rung ${r.num}: ${r.title}</div>`).join('')}
+            <div class="rung-menu-item" onclick="navigateToRung(event,'resultsSection')"><span class="rung-menu-num" style="background:var(--accent-gold)">&#9733;</span>Final Report</div>
+          </div>
+        </div>
         <div class="rung-header-sub">
           <span class="formerly">${rung.subtitle}</span>
           <span class="rung-question-inline">${rung.question}</span>
         </div>
-        <span class="header-score" id="headerScore${rung.num}">
-          <span class="header-score-val" id="headerScoreVal${rung.num}">0</span>/<span>${rung.behaviors.length * 4}</span>
-          <div class="header-score-bar"><div class="header-score-bar-fill" id="headerFill${rung.num}" style="width:0%"></div></div>
-          <span class="header-score-pct" id="headerScorePct${rung.num}">0%</span>
-        </span>
       </div>
       <div class="rung-body">
         <div class="rung-columns">
-          <div class="rung-left-col" style="cursor:pointer" onclick="openImgLightbox(${rung.num})">
-            <div class="rung-illustration">
+          <div class="rung-left-col">
+            <div class="rung-illustration" style="cursor:pointer" onclick="openImgLightbox(${rung.num})">
               <img src="${rung.illustration}" alt="${rung.title} illustration">
               ${rung.video ? `<video src="${rung.video}" muted playsinline preload="metadata"></video>` : ''}
             </div>
           </div>
           <div class="rung-form">
             ${rung.excels ? `
-            <div class="rung-context-row">
-              <div class="rung-context-block ctx-excels">
-                <h4>Excels When</h4>
-                <ul>${rung.excels.map(s => `<li>${s}</li>`).join('')}</ul>
+            <div class="rung-context-accordion">
+              <div class="ctx-acc-header" onclick="this.parentElement.classList.toggle('open')">
+                <span class="ctx-acc-label ctx-label-excels">Excels When</span>
+                <span class="ctx-acc-label ctx-label-struggling">Struggling When</span>
+                <span class="ctx-acc-label ctx-label-ready">Ready When</span>
+                <span class="ctx-acc-arrow">&#9662;</span>
               </div>
-              <div class="rung-context-block ctx-struggling">
-                <h4>Struggling When</h4>
-                <ul>${rung.struggling.map(s => `<li>${s}</li>`).join('')}</ul>
+              <div class="ctx-acc-body">
+                <div class="rung-context-row">
+                  <div class="rung-context-block ctx-excels">
+                    <h4>Excels When</h4>
+                    <ul>${rung.excels.map(s => `<li>${s}</li>`).join('')}</ul>
+                  </div>
+                  <div class="rung-context-block ctx-struggling">
+                    <h4>Struggling When</h4>
+                    <ul>${rung.struggling.map(s => `<li>${s}</li>`).join('')}</ul>
+                  </div>
+                  <div class="rung-context-block ctx-ready">
+                    <h4>${rung.readyLabel || 'Ready to Move Up When'}</h4>
+                    <ul>${rung.readyToMove.map(s => `<li>${s}</li>`).join('')}</ul>
+                  </div>
+                </div>
+                ${rung.tagline ? `<div class="rung-tagline">${rung.tagline}</div>` : ''}
               </div>
-              <div class="rung-context-block ctx-ready">
-                <h4>${rung.readyLabel || 'Ready to Move Up When'}</h4>
-                <ul>${rung.readyToMove.map(s => `<li>${s}</li>`).join('')}</ul>
-              </div>
-            </div>
-            ${rung.tagline ? `<div class="rung-tagline">${rung.tagline}</div>` : ''}` : ''}
+            </div>` : ''}
             <table class="behavior-table">
               <thead>
                 <tr>
@@ -1379,6 +1591,13 @@ function renderRungs() {
     </section>`;
   }).join('');
 
+  // Populate results menu
+  const resultsMenu = document.getElementById('resultsMenu');
+  if (resultsMenu) {
+    resultsMenu.innerHTML = RUNGS.map(r =>
+      `<div class="rung-menu-item" onclick="navigateToRung(event,'rung${r.num}')"><span class="rung-menu-num" style="background:${r.color}">${r.num}</span>Rung ${r.num}: ${r.title}</div>`
+    ).join('') + `<div class="rung-menu-item active" onclick="navigateToRung(event,'resultsSection')"><span class="rung-menu-num" style="background:var(--accent-gold)">&#9733;</span>Final Report</div>`;
+  }
 }
 
 function toggleRadio(el) {
@@ -1410,13 +1629,6 @@ function updateScores() {
     document.getElementById(`scoreVal${rung.num}`).textContent = `${score} / ${max}`;
     document.getElementById(`scoreFill${rung.num}`).style.width = `${pct}%`;
     document.getElementById(`scorePct${rung.num}`).textContent = `${pct}%`;
-    const hVal = document.getElementById(`headerScoreVal${rung.num}`);
-    const hPct = document.getElementById(`headerScorePct${rung.num}`);
-    if (hVal) hVal.textContent = score;
-    if (hPct) hPct.textContent = `${pct}%`;
-    const hFill = document.getElementById(`headerFill${rung.num}`);
-    if (hFill) hFill.style.width = `${pct}%`;
-
     if (pct >= 75) highestQualified = rung.num;
   });
 
@@ -1863,6 +2075,25 @@ function updateRungNotePreview(rung, text) {
 // Close on Escape
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') { closeNote(); }
+});
+
+function toggleRungMenu(wrap) {
+  const menu = wrap.querySelector('.rung-menu');
+  if (!menu) return;
+  const wasOpen = menu.classList.contains('open');
+  document.querySelectorAll('.rung-menu.open').forEach(m => m.classList.remove('open'));
+  if (!wasOpen) menu.classList.add('open');
+}
+function navigateToRung(evt, id) {
+  if (evt) evt.stopPropagation();
+  document.querySelectorAll('.rung-menu.open').forEach(m => m.classList.remove('open'));
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth' });
+}
+document.addEventListener('click', e => {
+  if (!e.target.closest('.rung-title-wrap')) {
+    document.querySelectorAll('.rung-menu.open').forEach(m => m.classList.remove('open'));
+  }
 });
 
 function openImgLightbox(rungNum) {
