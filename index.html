@@ -7,7 +7,8 @@
 <title>Engineering Ladder Assessment</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
 <style>
 
   :root {
@@ -53,7 +54,7 @@
   }
   .hero-bg {
     position: absolute; inset: -20px;
-    background: url('images/hero-ladder-path.jpg') center/contain no-repeat;
+    background: url('images/hero-ladder-path.webp') center/contain no-repeat;
     background-color: #faf6e4;
     opacity: 0.5;
     mask-image: radial-gradient(ellipse 95% 92% at center, black 85%, transparent 100%);
@@ -1360,17 +1361,16 @@
   </div>
 </section>
 
-<script defer src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
 <script>
 const RUNGS = [
   {
     num: 1, title: "The Apprentice", subtitle: "formerly Junior Engineer",
     salary: "$85K\u2013$120K", color: "var(--rung1)",
     question: "Why might this output be wrong?",
-    illustration: "images/rung1-apprentice-frame.jpg",
+    illustration: "images/rung1-apprentice-frame.webp",
     video: "images/rung1-apprentice-animation-loop.mp4",
-    square: "images/rung1-apprentice-square.png",
-    infographic: "images/rung1-apprentice-infographic.jpg",
+    square: "images/rung1-apprentice-square.webp",
+    infographic: "images/rung1-apprentice-infographic.webp",
     excels: ["Flags inconsistencies before merging", "Asks for context before shipping", "Escalates uncertainty rather than guessing through it", "Pull requests include questions, not just solutions"],
     struggling: ["Treats velocity as the goal", "Ships generated code they cannot explain", "Hides blockers to avoid looking unknowledgeable"],
     readyToMove: ["Can explain exactly why AI-generated code will fail in production", "Has shipped end-to-end with minimal guidance", "Postmortem was more insightful than their manager expected"],
@@ -1390,10 +1390,10 @@ const RUNGS = [
     num: 2, title: "The Builder", subtitle: "formerly Mid-Level Engineer",
     salary: "$120K\u2013$155K", color: "var(--rung2)",
     question: "What is this feature protecting the company from?",
-    illustration: "images/rung2-builder-frame.jpg",
+    illustration: "images/rung2-builder-frame.webp",
     video: "images/rung2-builder-animation-loop.mp4",
-    square: "images/rung2-builder-square.jpg",
-    infographic: "images/rung2-builder-infographic.jpg",
+    square: "images/rung2-builder-square.webp",
+    infographic: "images/rung2-builder-infographic.webp",
     excels: ["Sees upstream dependencies and downstream consequences", "Owns definition of done, edge cases, monitoring, customer impact", "Knows what matters to the business, not just the ticket", "Writes specs before prompting \u2014 thinks before building"],
     struggling: ["Technically proficient but scoped too narrow", "Delivers features in isolation", "Needs an explicit ticket to know what to work on next"],
     readyToMove: ["Has proactively identified and resolved an unassigned problem", "Has mentored an Apprentice visibly and with measurable result", "Technical decisions reference company goals without being prompted"],
@@ -1413,10 +1413,10 @@ const RUNGS = [
     num: 3, title: "The Architect", subtitle: "formerly Senior Engineer",
     salary: "$155K\u2013$210K", color: "var(--rung3)",
     question: "What does this decision cost us in six months?",
-    illustration: "images/rung3-architect-illustration.png",
+    illustration: "images/rung3-architect-illustration.webp",
     video: "images/rung3-architect-animation-loop.mp4",
-    square: "images/rung3-architect-square.jpg",
-    infographic: "images/rung3-architect-infographic.jpg",
+    square: "images/rung3-architect-square.webp",
+    infographic: "images/rung3-architect-infographic.webp",
     excels: ["Enters cross-functional conversations with answers before the question is finished", "The C-Suite understands them without translation", "Technical instincts show up as financial clarity", "Translates technical debt into business cost as a reflex"],
     struggling: ["Technically brilliant but organizationally invisible", "Right in the code review, wrong in the room", "Being correct but not being heard"],
     readyToMove: ["Has improved the output quality of a team they don\u2019t manage", "Has translated a technical risk into a business risk for a non-technical executive", "Has driven a build-vs-buy decision and can show the math"],
@@ -1436,10 +1436,10 @@ const RUNGS = [
     num: 4, title: "The Multiplier", subtitle: "formerly Staff Engineer",
     salary: "$210K\u2013$300K", color: "var(--rung4)",
     question: "How does the team make better decisions because of you?",
-    illustration: "images/rung4-multiplier-illustration.jpg",
+    illustration: "images/rung4-multiplier-illustration.webp",
     video: "images/rung4-multiplier-animation-loop.mp4",
-    square: "images/rung4-multiplier-square.jpg",
-    infographic: "images/rung4-multiplier-infographic.jpg",
+    square: "images/rung4-multiplier-square.webp",
+    infographic: "images/rung4-multiplier-infographic.webp",
     excels: ["Engineers leave their code reviews smarter than when they arrived", "Their standards get adopted without being mandated", "Their departure would be felt across teams, not just their own", "They define how AI-generated output gets evaluated and deployed"],
     struggling: ["Still primarily an individual contributor", "Produces excellent work that doesn\u2019t compound", "Hoards knowledge because it feels essential rather than building systems to transfer it"],
     readyToMove: ["Has changed how the engineering org evaluates an entire category of work", "The bar is voluntary adoption \u2014 people follow the standard because it made their work better"],
@@ -1460,9 +1460,9 @@ const RUNGS = [
     num: 5, title: "The Strategist", subtitle: "formerly Principal Engineer",
     salary: "$280K\u2013$450K+", color: "var(--rung5)",
     question: "Where do we need to be in two years and what does it cost to get there?",
-    illustration: "images/rung5-strategist-illustration.jpg",
-    square: "images/rung5-strategist-square.jpg",
-    infographic: "images/rung5-strategist-infographic.jpg",
+    illustration: "images/rung5-strategist-illustration.webp",
+    square: "images/rung5-strategist-square.webp",
+    infographic: "images/rung5-strategist-infographic.webp",
     excels: ["In the room for business decisions before the technical implications surface", "The CEO treats their input as commercial, not just technical", "Can quantify the cost of standing still", "Build-vs-buy opinions factor organizational capacity, not just technical preference"],
     struggling: ["Expert architecture instincts but no strategic patience", "Wants to solve the problem in front of them rather than the problem three years out", "Can describe the vision but not the price tag"],
     readyToMove: ["Can point to two decisions they made that the company is still benefiting from two years later", "Not decisions they recommended \u2014 decisions they drove"],
@@ -1710,7 +1710,19 @@ function gatherData() {
   return data;
 }
 
-function exportExcel() {
+function loadXLSX() {
+  return new Promise((resolve, reject) => {
+    if (typeof XLSX !== 'undefined') return resolve();
+    const s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js';
+    s.onload = resolve;
+    s.onerror = () => reject(new Error('Failed to load Excel library'));
+    document.head.appendChild(s);
+  });
+}
+
+async function exportExcel() {
+  try { await loadXLSX(); } catch(e) { alert(e.message); return; }
   const data = gatherData();
   const wb = XLSX.utils.book_new();
 
