@@ -1547,7 +1547,7 @@ function renderRungs() {
         <div class="rung-columns">
           <div class="rung-left-col">
             <div class="rung-illustration">
-              <img src="${rung.illustration}" alt="${rung.title} illustration" loading="lazy" width="336" height="500">
+              <img src="${rung.illustration}" alt="${rung.title} illustration" loading="lazy">
               ${rung.video ? `<video src="${rung.video}" muted playsinline preload="none"></video>` : ''}
             </div>
           </div>
@@ -2180,10 +2180,12 @@ document.querySelectorAll('.rung-illustration').forEach(el => {
   video.loop = false;
   el.addEventListener('mouseenter', () => {
     hovering = true;
-    el.classList.add('video-playing');
     video.currentTime = 0;
     video.play();
   });
+  video.addEventListener('playing', () => {
+    if (hovering) el.classList.add('video-playing');
+  }, { once: false });
   el.addEventListener('mouseleave', () => {
     hovering = false;
   });
