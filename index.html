@@ -56,7 +56,7 @@
   .hero-bg {
     position: absolute; inset: -20px;
     background-color: #faf6e4;
-    opacity: 0.5;
+    opacity: 0.25;
     mask-image: radial-gradient(ellipse 95% 92% at center, black 85%, transparent 100%);
     -webkit-mask-image: radial-gradient(ellipse 95% 92% at center, black 85%, transparent 100%);
     overflow: hidden;
@@ -80,40 +80,45 @@
   }
   .hero h1 {
     font-family: 'Playfair Display', serif;
-    font-size: clamp(2.8rem, 6vw, 4.5rem);
+    font-size: clamp(2.2rem, 6vw, 4.5rem);
     color: white;
     margin-bottom: 0.5rem;
     letter-spacing: -0.02em;
+    white-space: nowrap;
+    text-shadow: 0 1px 3px rgba(31,56,100,0.6);
   }
-  .hero .subtitle {
+  .hero-intro {
     font-family: 'Playfair Display', serif;
-    font-size: 1.15rem;
+    font-size: 1.2rem;
     color: rgba(255,255,255,0.85);
     font-weight: 400;
+    line-height: 1.7;
+    max-width: 750px;
+    margin: 0 auto 1rem;
+    text-shadow: 0 1px 2px rgba(31,56,100,0.5);
+  }
+  .hero-intro-secondary {
+    color: rgba(255,255,255,0.7);
+    font-size: 1.1rem;
     margin-bottom: 1.5rem;
   }
-  .hero .byline {
-    font-family: 'Playfair Display', serif;
-    font-size: 0.85rem;
-    color: rgba(255,255,255,0.75);
-    font-style: italic;
-  }
-  .hero-steps {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.8rem;
-    margin-top: 2.5rem;
-  }
-  .hero-step-text {
+  .hero-credits {
+    margin-bottom: 1.5rem;
     font-family: 'Playfair Display', serif;
     font-size: 0.95rem;
-    color: rgba(255,255,255,0.8);
-    font-weight: 400;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.8;
+    text-shadow: 0 1px 2px rgba(31,56,100,0.4);
   }
-  .hero-step-sep {
-    color: rgba(255,255,255,0.35);
-    font-size: 0.85rem;
+  .hero-credits a {
+    color: rgba(255,255,255,0.7);
+    text-decoration: underline;
+  }
+  .hero-credits a:hover {
+    color: white;
+  }
+  .hero-credits strong {
+    color: rgba(255,255,255,0.8);
   }
   .hero-cta {
     margin-top: 2rem;
@@ -185,12 +190,18 @@
     top: 0px;
     z-index: 15;
     box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-    transition: border-radius 0.2s;
+    transition: border-radius 0.2s, z-index 0s;
+  }
+  .rung-header:has(.rung-header-nav:hover),
+  .rung-header:has(.rung-menu:hover) {
+    z-index: 20;
   }
   .rung-header h2 {
     font-family: 'Playfair Display', serif;
     font-size: 1.6rem;
     letter-spacing: -0.01em;
+    line-height: 1;
+    transform: translateY(-1.5px);
   }
   .rung-header-sub {
     display: flex;
@@ -202,117 +213,135 @@
     opacity: 0.7;
     font-size: 0.9rem;
   }
-  .rung-question-inline {
-    font-size: 0.85rem;
-    opacity: 0.8;
+  .rung-header-status {
+    margin-left: auto;
+    white-space: nowrap;
+    display: none;
+  }
+  .rung-header-status.visible { display: inline-block; }
+  .rung-insight {
     font-style: italic;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.45;
+    text-align: center;
+    margin-bottom: 0.4rem;
+  }
+  .rung-insight:last-of-type {
+    margin-bottom: 1.2rem;
+  }
+  .rung-insight-label {
+    font-style: normal;
+    font-weight: 600;
+    color: var(--dark-blue);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
   }
   .rung-header-nav {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     align-items: center;
-    gap: 1px;
     flex-shrink: 0;
+    width: 76px;
+    border-radius: 5px;
+    border: 1px solid rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.06);
+    position: relative;
   }
   .rung-header-nav-btn {
-    background: rgba(255,255,255,0.12);
+    background: none;
     border: none;
-    color: white;
-    width: 32px;
-    height: 18px;
-    border-radius: 3px;
+    color: rgba(255,255,255,0.5);
+    height: 28px;
+    font-size: 0.75rem;
     cursor: pointer;
-    font-size: 0.55rem;
+    display: flex;
+    align-items: center;
+    padding: 0;
+  }
+  .rung-header-nav-btn:first-child {
+    justify-content: flex-start;
+    padding-left: 1px;
+  }
+  .rung-header-nav-btn:first-child .arrow {
+    transform: translateY(1px);
+  }
+  .rung-header-nav-btn:last-of-type {
+    justify-content: flex-end;
+    padding-right: 1px;
+  }
+  .rung-header-nav-btn:last-of-type .arrow {
+    transform: rotate(180deg);
+  }
+  .rung-header-nav-btn .arrow {
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background 0.15s;
-    padding: 0;
-    line-height: 1;
+    width: 26px;
+    height: 26px;
+    border-radius: 3px;
+    transition: color 0.15s;
   }
-  .rung-header-nav-btn:hover { background: rgba(255,255,255,0.25); }
+  .rung-header-nav-btn:hover .arrow { color: var(--accent-gold); }
+  .rung-header-nav-btn:disabled { opacity: 0.15; cursor: default; }
+  .rung-header-nav-btn:disabled:hover .arrow { color: rgba(255,255,255,0.5); }
   .rung-header-nav-count {
-    font-size: 0.7rem;
-    font-weight: 600;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 0.8rem;
+    font-weight: 500;
     color: rgba(255,255,255,0.5);
-    line-height: 1;
-    text-align: center;
-    width: 32px;
+    pointer-events: none;
   }
-  .rung-header-nav-btn:disabled { opacity: 0.2; cursor: default; }
-  .rung-header-nav-btn:disabled:hover { background: rgba(255,255,255,0.12); }
-  .rung-title-wrap {
-    position: relative;
-    cursor: pointer;
-    padding: 0.4rem 0.6rem;
-    margin: -0.4rem -0.6rem;
-    border-radius: 6px;
-  }
-  .rung-title-wrap:hover {
-    background: rgba(255,255,255,0.08);
+  .rung-header-nav-count strong {
+    color: rgba(255,255,255,0.85);
+    font-weight: 700;
   }
   .rung-title-wrap h2 {
     display: flex;
     align-items: baseline;
     gap: 0.4rem;
   }
-  .rung-menu-arrow {
-    font-size: 0.7em;
-    opacity: 0.5;
-    transition: opacity 0.2s, transform 0.2s;
-  }
-  .rung-title-wrap:hover .rung-menu-arrow { opacity: 0.9; }
-  .rung-menu.open + .rung-menu-arrow,
-  .rung-title-wrap:has(.rung-menu.open) .rung-menu-arrow { transform: rotate(180deg); opacity: 0.9; }
   .rung-menu {
     position: absolute;
     top: 100%;
     left: 0;
-    margin-top: 0;
-    background: var(--dark-blue);
-    border-radius: 0 0 8px 8px;
-    box-shadow: 0 12px 32px rgba(0,0,0,0.3);
-    width: 100%;
+    padding-top: 4px;
+    background: transparent;
+    min-width: 180px;
     z-index: 50;
-    overflow: hidden;
-    transform-origin: top center;
+    transform-origin: top left;
     transform: scaleY(0);
     opacity: 0;
-    transition: transform 0.2s ease, opacity 0.15s ease;
+    transition: transform 0.2s ease 0ms, opacity 0.15s ease 0ms;
     pointer-events: none;
   }
-  .rung-menu.open {
+  .rung-menu-inner {
+    border-radius: 8px;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.3);
+    overflow: hidden;
+  }
+  .rung-header-nav:hover .rung-menu:not(.hiding),
+  .rung-menu:hover:not(.hiding) {
     transform: scaleY(1);
     opacity: 1;
     pointer-events: auto;
+    transition-delay: 300ms;
   }
   .rung-menu-item {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.4rem 0.8rem;
+    padding: 0.45rem 0.8rem;
     font-family: 'Playfair Display', serif;
     font-size: 0.85rem;
     font-weight: 500;
-    color: rgba(255,255,255,0.7);
+    color: rgba(255,255,255,0.85);
     cursor: pointer;
-    transition: background 0.15s;
+    transition: filter 0.15s;
   }
-  .rung-menu-item:hover { background: rgba(255,255,255,0.1); color: white; }
-  .rung-menu-item.active { background: rgba(255,255,255,0.15); color: white; font-weight: 700; }
-  .rung-menu-num {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-family: sans-serif;
-    font-size: 0.65rem;
-    font-weight: 700;
-    flex-shrink: 0;
-  }
+  .rung-menu-item:hover { filter: brightness(1.15); color: white; }
+  .rung-menu-item.active { font-weight: 700; color: white; }
 
 
   .rung-body {
@@ -485,14 +514,27 @@
     font-size: 0.85rem;
     color: var(--med-blue);
   }
-  .rung-tagline {
-    font-style: italic;
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    padding: 0;
-    margin-bottom: 1.2rem;
-    line-height: 1.45;
+
+  /* Category section headers in behavior table */
+  .behavior-table .category-row td {
+    padding: 0.6rem 0.5rem 0.3rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border-bottom: 2px solid;
+    background: transparent;
+  }
+  .behavior-table .category-row.cat-excels td { color: var(--success); border-bottom-color: var(--success); }
+  .behavior-table .category-row.cat-struggling td { color: var(--warning); border-bottom-color: var(--warning); }
+  .behavior-table .category-row.cat-ready td { color: var(--med-blue); border-bottom-color: var(--med-blue); }
+  .behavior-table .category-row td:not(:first-child) {
+    font-size: 0.75rem;
+    font-weight: 600;
     text-align: center;
+    color: var(--text-muted);
+    letter-spacing: 0;
+    text-transform: none;
   }
 
   /* ── FORM TABLE ── */
@@ -506,6 +548,7 @@
     width: 100%;
     border-collapse: collapse;
     font-size: 1rem;
+    line-height: 1;
   }
   .behavior-table thead th {
     padding: 0.7rem 0.5rem;
@@ -545,14 +588,41 @@
   }
   .behavior-table tbody tr:hover { background: #F9FAFB; }
   .behavior-table td {
-    padding: 0.8rem 0.5rem;
+    padding: 0 0.5rem;
     vertical-align: middle;
+    line-height: 1;
   }
   .behavior-table td:first-child {
     font-size: 0.95rem;
     line-height: 1.5;
     color: var(--text-dark);
     padding-right: 0.8rem;
+  }
+
+  /* Behavior tooltips */
+  .behavior-question {
+    font-weight: 600;
+    display: block;
+    position: relative;
+    top: 0.6rem;
+    transition: top 0.15s ease;
+  }
+  .behavior-table tbody tr:hover .behavior-question {
+    top: 0;
+    transition: top 0.2s ease 0.3s;
+  }
+  .behavior-hint {
+    display: block;
+    font-size: 0.78rem;
+    color: transparent;
+    font-style: italic;
+    line-height: 1;
+    margin-top: 0.25rem;
+    transition: color 0.15s ease;
+  }
+  .behavior-table tbody tr:hover .behavior-hint {
+    color: var(--text-muted);
+    transition: color 0.2s ease 0.3s;
   }
 
   /* Radio buttons as score selectors */
@@ -573,8 +643,12 @@
     position: relative;
   }
   .score-radio:hover {
-    border-color: var(--med-blue);
     transform: scale(1.1);
+  }
+  .score-radio[value="1"]:hover { border-color: var(--danger); }
+  .score-radio[value="2"]:hover { border-color: var(--warning); }
+  .score-radio[value="3"]:hover { border-color: var(--med-blue); }
+  .score-radio[value="4"]:hover { border-color: var(--success);
   }
   .score-radio:checked {
     border-width: 3px;
@@ -908,6 +982,49 @@
     box-shadow: 0 0 0 3px rgba(46,117,182,0.1);
   }
 
+  /* Two-axis score summary */
+  .score-axes {
+    display: flex;
+    gap: 1.5rem;
+    margin: 1rem 0;
+    padding: 1rem;
+    background: white;
+    border-radius: 10px;
+    border: 1px solid #E5E7EB;
+  }
+  .score-axis {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+  .score-axis-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .score-axis-label.axis-competence { color: var(--dark-blue); }
+  .score-axis-label.axis-readiness { color: var(--med-blue); }
+  .score-axis-bar {
+    height: 8px;
+    background: #E5E7EB;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .score-axis-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.4s ease;
+  }
+  .score-axis-fill.fill-competence { background: var(--dark-blue); }
+  .score-axis-fill.fill-readiness { background: var(--med-blue); }
+  .score-axis-value {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-dark);
+  }
+
   /* ── RESULTS SECTION ── */
   .results-header {
     background: var(--accent-gold);
@@ -922,10 +1039,21 @@
     z-index: 15;
     box-shadow: 0 2px 8px rgba(0,0,0,0.15);
   }
+  .results-header:has(.rung-header-nav:hover),
+  .results-header:has(.rung-menu:hover) {
+    z-index: 20;
+  }
   .results-header h2 {
     font-family: 'Playfair Display', serif;
     font-size: 1.6rem;
     letter-spacing: -0.01em;
+    line-height: 1;
+    transform: translateY(-1.5px);
+  }
+  .results-header .formerly {
+    font-style: italic;
+    opacity: 0.7;
+    font-size: 0.9rem;
   }
   .results-section {
     background: var(--dark-blue);
@@ -1203,6 +1331,7 @@
     .rung-header { padding: 0.5rem 1rem; }
     .rung-header h2 { font-size: 1.3rem; }
     .behavior-table { font-size: 0.8rem; }
+    .behavior-hint { font-size: 0.72rem; }
     .results-section { padding: 2rem 1rem; }
     .results-inner { flex-direction: column; }
     .results-left { width: 100%; }
@@ -1221,14 +1350,11 @@
   <div class="hero-bg"><img src="images/hero-ladder-path.webp" alt="" fetchpriority="high" width="1024" height="1024" onload="this.classList.add('loaded')"></div>
   <div class="hero-content">
     <h1>The Engineering Ladder</h1>
-    <p class="subtitle">A performance ladder that measures judgment, not just output</p>
-    <p class="byline">Based on <a href="https://ctosub.com/p/the-ctos-new-engineering-ladder?utm_campaign=post" target="_blank" style="color:rgba(255,255,255,0.7);text-decoration:underline">"The CTO's New Engineering Ladder"</a> by Etienne de Bruin, March 2026</p>
-    <div class="hero-steps">
-      <span class="hero-step-text">Explore 5 Rungs</span>
-      <span class="hero-step-sep">&#8594;</span>
-      <span class="hero-step-text">Score Behaviors</span>
-      <span class="hero-step-sep">&#8594;</span>
-      <span class="hero-step-text">Review Results</span>
+    <p class="hero-intro">Most engineering ladders still reward the things AI is getting good at. Code velocity. Feature throughput. Sprint completion. The things that actually make an engineer irreplaceable &mdash; judgment about what to build, instinct for what will break, the ability to translate a technical risk into a business cost &mdash; get no column in the spreadsheet.</p>
+    <p class="hero-intro hero-intro-secondary">This tool evaluates engineers against a five-rung ladder &mdash; from Apprentice to Strategist &mdash; scoring observable signals across three categories at each level. Concrete signals a manager can actually point to in a conversation.</p>
+    <div class="hero-credits">
+      <p>Based on <a href="https://ctosub.com/p/the-ctos-new-engineering-ladder" target="_blank">"The CTO's New Engineering Ladder"</a> by <strong>Etienne de Bruin</strong>, March 2026</p>
+      <p>Assessment tool by <a href="https://www.linkedin.com/in/maximilienfourmy" target="_blank">Maximilien Fourmy</a></p>
     </div>
     <button class="hero-cta" onclick="document.getElementById('rung1').scrollIntoView({behavior:'smooth'})">Begin Assessment <span class="hero-cta-chevron">&#9662;</span></button>
   </div>
@@ -1269,12 +1395,13 @@
 <section class="results-section" id="resultsSection">
   <div class="results-header" id="resultsHeader">
     <div class="rung-header-nav">
-      <button class="rung-header-nav-btn" onclick="navigateToRung(event,'rung5')">&#9650;</button>
-      <button class="rung-header-nav-btn" disabled>&#9660;</button>
+      <button class="rung-header-nav-btn" onclick="navigateToRung(event,'rung5')"><span class="arrow">&#9650;</span></button>
+      <span class="rung-header-nav-count"><strong>&#9733;</strong></span>
+      <button class="rung-header-nav-btn" disabled><span class="arrow">&#9650;</span></button>
+      <div class="rung-menu" id="resultsMenu"></div>
     </div>
-    <div class="rung-title-wrap" onclick="toggleRungMenu(this)">
-      <h2>Final Report <span class="rung-menu-arrow">&#9662;</span></h2>
-      <div class="rung-menu" style="background:var(--accent-gold)" id="resultsMenu"></div>
+    <div class="rung-title-wrap">
+      <h2>Final Report</h2>
     </div>
     <div class="rung-header-sub">
       <span class="formerly">Assessment summary &amp; export</span>
@@ -1289,11 +1416,10 @@
         <div class="fl-label">Final Rung Level</div>
         <div class="fl-name">Not yet assessed</div>
       </div>
-      <div class="results-overall">
-        <span class="fo-label">Overall Score</span>
-        <span class="fo-score" id="overallScore">0/140</span>
-        <span class="fo-pct" id="overallPct">0%</span>
-      </div>
+      <span id="overallScore" style="display:none"></span>
+      <span id="overallPct" style="display:none"></span>
+      <span id="overallReadyScore" style="display:none"></span>
+      <span id="overallReadyPct" style="display:none"></span>
       <div id="resultsRungRows" class="results-rung-rows"></div>
       <div class="results-io">
         <div class="results-io-fields">
@@ -1310,7 +1436,7 @@
           <button class="results-btn" onclick="exportExcel()">Export Excel</button>
           <button class="results-btn" onclick="exportData()">Export JSON</button>
           <button class="results-btn" onclick="document.getElementById('importFile').click()">Import JSON</button>
-          <button class="results-btn results-btn-danger" onclick="if(confirm('Reset all scores and notes?')){resetAll()}">Reset All</button>
+          <button class="results-btn results-btn-danger" onclick="resetAll()">Reset All</button>
         </div>
       </div>
     </div>
@@ -1330,17 +1456,7 @@ const RUNGS = [
     excels: ["Flags inconsistencies before merging", "Asks for context before shipping", "Escalates uncertainty rather than guessing through it", "Pull requests include questions, not just solutions"],
     struggling: ["Treats velocity as the goal", "Ships generated code they cannot explain", "Hides blockers to avoid looking unknowledgeable"],
     readyToMove: ["Can explain exactly why AI-generated code will fail in production", "Has shipped end-to-end with minimal guidance", "Postmortem was more insightful than their manager expected"],
-    tagline: "AI can ship it. The Apprentice earns their place by interrogating output rather than accepting it.",
-    behaviors: [
-      "Flags inconsistencies in code before merging",
-      "Asks for context before shipping features",
-      "Escalates uncertainty rather than guessing through it",
-      "Pull requests include questions, not just solutions",
-      "Builds original features and writes real code",
-      "Interrogates AI-assisted output \u2014 their own and others\u2019",
-      "Can explain why AI-generated code will fail in a specific production scenario"
-    ],
-    promotion: "Can explain why AI-generated code will fail in production. Has shipped something end-to-end with minimal guidance. Postmortem was more insightful than expected."
+    tagline: "AI can ship it. The Apprentice earns their place by interrogating output rather than accepting it."
   },
   {
     num: 2, title: "The Builder", subtitle: "formerly Mid-Level Engineer",
@@ -1353,17 +1469,7 @@ const RUNGS = [
     excels: ["Sees upstream dependencies and downstream consequences", "Owns definition of done, edge cases, monitoring, customer impact", "Knows what matters to the business, not just the ticket", "Writes specs before prompting \u2014 thinks before building"],
     struggling: ["Technically proficient but scoped too narrow", "Delivers features in isolation", "Needs an explicit ticket to know what to work on next"],
     readyToMove: ["Has proactively identified and resolved an unassigned problem", "Has mentored an Apprentice visibly and with measurable result", "Technical decisions reference company goals without being prompted"],
-    tagline: "In a world where AI can scaffold a service in two hours, their value is knowing which service to build and when to throw the output away.",
-    behaviors: [
-      "Owns a feature end-to-end: definition of done, edge cases, monitoring, customer impact",
-      "Knows when to throw away AI-generated scaffolding and start again",
-      "Writes specs or design docs before prompting \u2014 thinks before building",
-      "Proactively identifies problems that nobody assigned them",
-      "Technical decisions reference company goals without being prompted",
-      "Understands what\u2019s upstream and downstream of the feature they\u2019re building",
-      "Has mentored an Apprentice visibly and with measurable result"
-    ],
-    promotion: "Has resolved an unassigned problem. Has mentored successfully. Can connect a technical decision to a business outcome without prompting. Doesn\u2019t need tickets to know what matters."
+    tagline: "In a world where AI can scaffold a service in two hours, their value is knowing which service to build and when to throw the output away."
   },
   {
     num: 3, title: "The Architect", subtitle: "formerly Senior Engineer",
@@ -1376,17 +1482,7 @@ const RUNGS = [
     excels: ["Enters cross-functional conversations with answers before the question is finished", "The C-Suite understands them without translation", "Technical instincts show up as financial clarity", "Translates technical debt into business cost as a reflex"],
     struggling: ["Technically brilliant but organizationally invisible", "Right in the code review, wrong in the room", "Being correct but not being heard"],
     readyToMove: ["Has improved the output quality of a team they don\u2019t manage", "Has translated a technical risk into a business risk for a non-technical executive", "Has driven a build-vs-buy decision and can show the math"],
-    tagline: "Being correct is not enough at this level. The AI era makes the gap between correct and heard more consequential than ever.",
-    behaviors: [
-      "Walks into cross-functional conversations with answers before questions are finished",
-      "The C-Suite understands them \u2014 translates technical concepts for executives",
-      "Technical instincts show up as financial clarity",
-      "Translates technical debt into business cost without being asked",
-      "Sees downstream consequences of decisions before anyone else",
-      "Has improved the output quality of a team they don\u2019t manage",
-      "Has driven a consequential build-vs-buy decision and can show the math"
-    ],
-    promotion: "Has demonstrably improved output quality of a team they don\u2019t manage. Has translated a technical risk into a business risk understood by a non-technical executive. Has driven a build-vs-buy decision with clear math."
+    tagline: "Being correct is not enough at this level. The AI era makes the gap between correct and heard more consequential than ever."
   },
   {
     num: 4, title: "The Multiplier", subtitle: "formerly Staff Engineer",
@@ -1400,17 +1496,7 @@ const RUNGS = [
     struggling: ["Still primarily an individual contributor", "Produces excellent work that doesn\u2019t compound", "Hoards knowledge because it feels essential rather than building systems to transfer it"],
     readyToMove: ["Has changed how the engineering org evaluates an entire category of work", "The bar is voluntary adoption \u2014 people follow the standard because it made their work better"],
     readyLabel: "Ready for Expanded Scope When",
-    tagline: "If a Multiplier leaves, the team doesn\u2019t slow down by one \u2014 it slows down by the compounded capability they were adding to everyone around them.",
-    behaviors: [
-      "Engineers leave their code reviews smarter than when they arrived",
-      "Their standards get adopted without being mandated",
-      "Their departure would be felt across teams, not just their own",
-      "Defines how AI-generated output gets evaluated, trusted, and deployed",
-      "Builds systems that transfer knowledge rather than hoarding it",
-      "Output is the quality of everyone else\u2019s judgment, not just features",
-      "Impact compounds beyond their own individual contribution"
-    ],
-    promotion: "Has changed how the engineering organization evaluates an entire category of work \u2014 not just one team. The bar is voluntary adoption: people follow the standard because it made their work better, not because they were told to."
+    tagline: "If a Multiplier leaves, the team doesn\u2019t slow down by one \u2014 it slows down by the compounded capability they were adding to everyone around them."
   },
   {
     num: 5, title: "The Strategist", subtitle: "formerly Principal Engineer",
@@ -1424,19 +1510,100 @@ const RUNGS = [
     struggling: ["Expert architecture instincts but no strategic patience", "Wants to solve the problem in front of them rather than the problem three years out", "Can describe the vision but not the price tag"],
     readyToMove: ["Can point to two decisions they made that the company is still benefiting from two years later", "Not decisions they recommended \u2014 decisions they drove"],
     readyLabel: "Ready for More Scope When",
-    tagline: "Someone still has to be smart enough to point the AI in the right direction, and wise enough to know when not to.",
-    behaviors: [
-      "In the room for business decisions before technical implications surface",
-      "The CEO treats their input as commercial, not just technical",
-      "Can quantify the cost of standing still",
-      "Build-vs-buy opinions factor in organizational capacity, not just tech preference",
-      "Understands the Engineering Efficiency Ratio and how their decisions move it",
-      "Thinks about business problems before the business knows it has a question",
-      "Can point to decisions they drove that the company still benefits from years later"
-    ],
-    promotion: "Can point to two decisions they made that the company is still benefiting from two years later. Not decisions they recommended \u2014 decisions they drove."
+    tagline: "Someone still has to be smart enough to point the AI in the right direction, and wise enough to know when not to."
   }
 ];
+
+const TOOLTIPS = {
+  1: {
+    excels: [
+      "Look for PR comments where they questioned AI output, caught edge cases, or asked 'why does this work this way?' before merging. Interrogating output — their own and others' — is what signals genuine understanding now that AI can generate the code.",
+      "Do they ask about user context, business rules, or deployment environment before writing code? A 1 means they jump straight to coding without understanding the problem. The Apprentice earns their place by interrogating output, not accepting it.",
+      "When they hit something unfamiliar, do they raise it quickly or spend days stuck? At this level, saying 'I don't know' out loud is exactly what they should be doing. Look for early signals in standups or Slack.",
+      "Check their PRs: do they include questions, not just solutions? 'I wasn't sure about X' or 'Could we also consider Y?' shows they treat PRs as learning conversations. Prompting fluently and understanding deeply are not the same thing."
+    ],
+    struggling: [
+      "AI has removed the friction that once naturally filtered for understanding. Are they measuring success by tickets closed or lines shipped? When velocity is the goal, judgment stops developing.",
+      "Ask them to walk through code they recently shipped. If they can't explain the error handling or why a particular pattern was chosen, they're shipping generated code they cannot explain — and that's a liability, not just a gap.",
+      "Do blockers surface late, often when someone else discovers them? At this level, not knowing something is expected — hiding it is the problem. Create psychological safety so they can raise issues early."
+    ],
+    ready: [
+      "Can they explain why a specific piece of AI-generated code will fail in a specific production scenario? Not just that it might fail — why it will, and in what conditions. That specificity is the signal.",
+      "Have they shipped something end-to-end with minimal guidance? Look for evidence they handled testing, edge cases, and deployment — the full lifecycle, not just the happy path.",
+      "Was their last postmortem more insightful than their manager expected? A ready Apprentice brings fresh eyes and genuine curiosity — they identify root causes others hadn't considered, not just a timeline of events."
+    ]
+  },
+  2: {
+    excels: [
+      "Do they see around the feature they're building? A strong Builder traces upstream dependencies and downstream consequences. Ask: 'What breaks if this input changes?' and 'What happens when it breaks?'",
+      "Do they own the definition of done — edge cases, production monitoring, customer impact — or do they wait for QA to catch gaps? The Builder owns the full surface, not just the implementation.",
+      "Can they explain how their current task connects to a business goal without being told? Ask: 'Why does this feature matter to the company right now?' They should know what matters to the business, not just the ticket.",
+      "Do they write specs before they prompt? In a world where AI can scaffold a service in two hours, the Builder's value is knowing which service to build and when to throw the output away."
+    ],
+    struggling: [
+      "They deliver high-quality code but don't consider adjacent systems. Ask: 'What else in the codebase is affected by this change?' Technically proficient but scoped too narrow is the classic Builder plateau.",
+      "Do they build features without considering how they interact with other teams' work? Delivering features in isolation leads to rework when integration surprises surface.",
+      "If the ticket queue is empty, do they find valuable work or wait? A Builder should identify what needs doing from context — bug reports, tech debt, user feedback — without needing an explicit assignment."
+    ],
+    ready: [
+      "Can they point to a specific problem they found and fixed that nobody assigned them? The key word is 'proactively' — they saw a gap in the system and filled it before it became urgent.",
+      "Have they mentored an Apprentice visibly and with measurable results? Did the Apprentice's PR quality improve? Did they start flagging issues independently? Look for compounding effect.",
+      "Do their technical decisions reference company goals without being prompted? 'We should cache this because response time directly affects conversion' shows the shift from Builder to Architect thinking."
+    ]
+  },
+  3: {
+    excels: [
+      "Do they walk into cross-functional conversations with answers before people have finished asking the question? A strong Architect anticipates timeline, cost, and risk simultaneously.",
+      "Can the C-Suite understand them without translation? Test this: ask a non-technical stakeholder if they felt informed after this engineer's last presentation. Communication is the skill, not just correctness.",
+      "Do their technical instincts show up as financial clarity? Look for natural framing like 'This refactor saves us $X/month in infra' or 'This tech debt costs us Y engineer-hours per sprint.'",
+      "Do they translate tech debt into business cost as a reflex — not in a presentation, but in everyday conversation? A 4 means they instantly say 'this costs us 2 days per sprint' rather than just 'this is bad code.'"
+    ],
+    struggling: [
+      "They are technically brilliant but organizationally invisible. No one outside engineering knows their name. Do PMs seek their input? Does leadership know what they think? Visibility is a skill at this level, not vanity.",
+      "Right in the code review, wrong in the room. Being correct is not enough at this level. The AI era makes the gap between correct and heard more consequential than ever — the Architect who can't influence decisions is stuck.",
+      "They have the right answers but can't get buy-in. Look for patterns where technically sound proposals get deprioritized because stakeholders didn't understand the value. The problem is framing, not thinking."
+    ],
+    ready: [
+      "Have they demonstrably improved the output quality of a team they don't manage? Through tooling, processes, standards, or mentoring — the key is cross-team impact without positional authority.",
+      "Have they translated a technical risk into a business risk and been understood by a non-technical executive? The test: did the executive change a decision based on this engineer's framing?",
+      "Have they driven a consequential build-vs-buy decision and can show the math? Not just 'we should build it' but 'building costs X over 3 years, buying costs Y, and here's the maintenance delta.'"
+    ]
+  },
+  4: {
+    excels: [
+      "Do engineers leave their code reviews smarter than when they arrived? A strong Multiplier teaches the underlying principle — not just the fix — so the lesson compounds across all future work.",
+      "Do their standards get adopted without being mandated? People following a standard because they were told to is compliance. People following it because it made their work better is influence.",
+      "If they left, would the team slow down by more than one? A Multiplier's departure isn't felt as losing one person — it's felt as losing the compounded capability they were adding to everyone around them.",
+      "Do they define how AI-generated output gets evaluated, trusted, and deployed? They don't just use the tools — they determine how the organization relates to them. Look for review frameworks, quality gates, or evaluation standards they created."
+    ],
+    struggling: [
+      "Despite their seniority, their impact is still 1x. They produce excellent work that doesn't compound. The shift from 'best individual player' to 'makes the whole team better' is the entire point of this rung.",
+      "Their work is high quality but doesn't create lasting capability in others. Do they teach, write docs, build tools — or do they just solve problems themselves? Excellent work that doesn't compound is a Builder pattern at Multiplier pay.",
+      "They hoard knowledge because it makes them feel essential. A Multiplier builds systems that transfer knowledge so the team doesn't depend on any single person — including them."
+    ],
+    ready: [
+      "Have they changed how the engineering org evaluates an entire category of work — not just one team, but the organization? Example: redefined how the company does API design, testing, or incident response.",
+      "People following a standard because they were told to is compliance. People following it because it made their work better is influence. Voluntary adoption is the bar — if it requires enforcement, it's not ready."
+    ]
+  },
+  5: {
+    excels: [
+      "Are they in the room for business decisions before the technical implications surface? A Strategist is consulted on business direction, not just asked to implement it afterward.",
+      "Does the CEO treat their input as commercial, not just technical? The shift from 'our engineer says' to 'our strategist recommends' signals they've crossed from technical authority to business authority.",
+      "Can they quantify the cost of standing still? 'Not migrating costs us $X/quarter in lost deals and Y hours in workarounds.' This is the language that moves budgets and changes timelines.",
+      "Do their build-vs-buy opinions factor organizational capacity, not just technical preference? They understand hiring timelines, team readiness, and the gap between what's technically possible and what the org can actually execute."
+    ],
+    struggling: [
+      "They have expert architecture instincts but no strategic patience. Strategy requires sustained influence over quarters and years, not just brilliant solutions in the moment. The problem three years out matters more than the one in front of them.",
+      "They want to solve the problem in front of them rather than the problem three years out. Ask: 'What do you see coming that we aren't preparing for?' If they can't answer, they're operating as an Architect, not a Strategist.",
+      "They can describe the vision but not the price tag. Vision without a business case stays on the whiteboard. Can they answer 'what does it cost and when does it pay off?' for every initiative they champion?"
+    ],
+    ready: [
+      "Can they point to two decisions they made that the company is still benefiting from two years later? Not decisions they recommended — decisions they drove. That distinction is the entire difference between Architect and Strategist.",
+      "Recommending is Architect-level. Driving means they built consensus, managed trade-offs, saw it through to completion, and the results are still compounding. Look for sustained ownership of outcomes that outlasted any single quarter."
+    ]
+  }
+};
 
 function renderRungs() {
   const main = document.getElementById('mainContent');
@@ -1452,21 +1619,23 @@ function renderRungs() {
     <section class="rung-section" id="rung${rung.num}">
       <div class="rung-header" style="background:${rung.color}">
         <div class="rung-header-nav">
-          <button class="rung-header-nav-btn" onclick="navigateToRung(event,'${rung.num > 1 ? 'rung'+(rung.num-1) : ''}')" ${rung.num === 1 ? 'disabled' : ''}>&#9650;</button>
-          <span class="rung-header-nav-count">${rung.num}/5</span>
-          <button class="rung-header-nav-btn" onclick="navigateToRung(event,'${rung.num < 5 ? 'rung'+(rung.num+1) : 'resultsSection'}')">&#9660;</button>
-        </div>
-        <div class="rung-title-wrap" onclick="toggleRungMenu(this)">
-          <h2>Rung ${rung.num}: ${rung.title} <span class="rung-menu-arrow">&#9662;</span></h2>
-          <div class="rung-menu" style="background:${rung.color}">
-            ${RUNGS.map(r => `<div class="rung-menu-item ${r.num === rung.num ? 'active' : ''}" onclick="navigateToRung(event,'rung${r.num}')"><span class="rung-menu-num" style="background:${r.color}">${r.num}</span>Rung ${r.num}: ${r.title}</div>`).join('')}
-            <div class="rung-menu-item" onclick="navigateToRung(event,'resultsSection')"><span class="rung-menu-num" style="background:var(--accent-gold)">&#9733;</span>Final Report</div>
+          <button class="rung-header-nav-btn" onclick="navigateToRung(event,'${rung.num > 1 ? 'rung'+(rung.num-1) : ''}')" ${rung.num === 1 ? 'disabled' : ''}><span class="arrow">&#9650;</span></button>
+          <span class="rung-header-nav-count"><strong>${rung.num}</strong> / 5</span>
+          <button class="rung-header-nav-btn" onclick="navigateToRung(event,'${rung.num < 5 ? 'rung'+(rung.num+1) : 'resultsSection'}')"><span class="arrow">&#9650;</span></button>
+          <div class="rung-menu">
+            <div class="rung-menu-inner">
+            ${RUNGS.map(r => `<div class="rung-menu-item ${r.num === rung.num ? 'active' : ''}" style="background:${r.color}" onclick="navigateToRung(event,'rung${r.num}')">Rung ${r.num}: ${r.title}</div>`).join('')}
+            <div class="rung-menu-item" style="background:var(--accent-gold)" onclick="navigateToRung(event,'resultsSection')">Final Report</div>
+            </div>
           </div>
+        </div>
+        <div class="rung-title-wrap">
+          <h2>Rung ${rung.num}: ${rung.title}</h2>
         </div>
         <div class="rung-header-sub">
           <span class="formerly">${rung.subtitle}</span>
-          <span class="rung-question-inline">Their question: ${rung.question}</span>
         </div>
+        <span class="rung-header-status" id="rungStatus${rung.num}"></span>
       </div>
       <div class="rung-body">
         <div class="rung-columns">
@@ -1477,56 +1646,95 @@ function renderRungs() {
             </div>
           </div>
           <div class="rung-form">
-            ${rung.excels ? `
-            <div class="rung-context-row">
-              <div class="rung-context-block ctx-excels">
-                <h4>Excels When</h4>
-                <ul>${rung.excels.map(s => `<li>${s}</li>`).join('')}</ul>
-              </div>
-              <div class="rung-context-block ctx-struggling">
-                <h4>Struggling When</h4>
-                <ul>${rung.struggling.map(s => `<li>${s}</li>`).join('')}</ul>
-              </div>
-              <div class="rung-context-block ctx-ready">
-                <h4>${rung.readyLabel || 'Ready to Move Up When'}</h4>
-                <ul>${rung.readyToMove.map(s => `<li>${s}</li>`).join('')}</ul>
-              </div>
-            </div>
-            ${rung.tagline ? `<div class="rung-tagline">${rung.tagline}</div>` : ''}` : ''}
+            <div class="rung-insight"><span class="rung-insight-label">Their Question:</span> ${rung.question}</div>
+            ${rung.tagline ? `<div class="rung-insight"><span class="rung-insight-label">Key Insight:</span> ${rung.tagline}</div>` : ''}
             <table class="behavior-table">
-              <thead>
-                <tr>
-                  <th>Observable Behavior</th>
-                  <th class="score-header not-yet">1<br>Not Yet</th>
-                  <th class="score-header emerging">2<br>Emerging</th>
-                  <th class="score-header consistent">3<br>Consistent</th>
-                  <th class="score-header exemplary">4<br>Exemplary</th>
-                  <th>Notes</th>
-                </tr>
-              </thead>
+              <thead style="display:none"><tr>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+              </tr></thead>
               <tbody>
-                ${rung.behaviors.map((b, i) => `
+                <tr class="category-row cat-excels">
+                  <td>Excels When</td>
+                  <td>1 Not Yet</td>
+                  <td>2 Emerging</td>
+                  <td>3 Consistent</td>
+                  <td>4 Exemplary</td>
+                  <td>Notes</td>
+                </tr>
+                ${rung.excels.map((item, i) => `
                 <tr>
-                  <td>${b}</td>
+                  <td><span class="behavior-question">${item}</span>${TOOLTIPS[rung.num]?.excels?.[i] ? `<span class="behavior-hint">${TOOLTIPS[rung.num].excels[i]}</span>` : ''}</td>
                   ${[1,2,3,4].map(v => `
                   <td class="score-cell">
-                    <input type="radio" class="score-radio" name="rung${rung.num}_b${i}" value="${v}" data-rung="${rung.num}" onclick="toggleRadio(this)" onchange="updateScores()">
+                    <input type="radio" class="score-radio" name="rung${rung.num}_excels_${i}" value="${v}" data-rung="${rung.num}" data-category="excels" onclick="toggleRadio(this)" onchange="updateScores()">
                   </td>`).join('')}
                   <td class="note-cell">
-                    <div class="note-preview" onclick="openNote(${rung.num}, ${i})" id="notePreview_${rung.num}_${i}">
+                    <div class="note-preview" onclick="openNote(${rung.num}, 'excels', ${i})" id="notePreview_${rung.num}_excels_${i}">
                       <svg class="note-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M11.5 1.5l3 3L5 14H2v-3L11.5 1.5z"/></svg>
                       <span class="note-text"></span>
                     </div>
-                    <input type="hidden" class="note-data" data-rung="${rung.num}" data-behavior="${i}" value="">
+                    <input type="hidden" class="note-data" data-rung="${rung.num}" data-category="excels" data-behavior="${i}" value="">
+                  </td>
+                </tr>`).join('')}
+                <tr class="category-row cat-struggling">
+                  <td>Struggling When</td>
+                  <td>1 Frequently</td>
+                  <td>2 Sometimes</td>
+                  <td>3 Rarely</td>
+                  <td>4 Never</td>
+                  <td>Notes</td>
+                </tr>
+                ${rung.struggling.map((item, i) => `
+                <tr>
+                  <td><span class="behavior-question">${item}</span>${TOOLTIPS[rung.num]?.struggling?.[i] ? `<span class="behavior-hint">${TOOLTIPS[rung.num].struggling[i]}</span>` : ''}</td>
+                  ${[1,2,3,4].map(v => `
+                  <td class="score-cell">
+                    <input type="radio" class="score-radio" name="rung${rung.num}_struggling_${i}" value="${v}" data-rung="${rung.num}" data-category="struggling" onclick="toggleRadio(this)" onchange="updateScores()">
+                  </td>`).join('')}
+                  <td class="note-cell">
+                    <div class="note-preview" onclick="openNote(${rung.num}, 'struggling', ${i})" id="notePreview_${rung.num}_struggling_${i}">
+                      <svg class="note-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M11.5 1.5l3 3L5 14H2v-3L11.5 1.5z"/></svg>
+                      <span class="note-text"></span>
+                    </div>
+                    <input type="hidden" class="note-data" data-rung="${rung.num}" data-category="struggling" data-behavior="${i}" value="">
+                  </td>
+                </tr>`).join('')}
+                <tr class="category-row cat-ready">
+                  <td>${rung.readyLabel || 'Ready to Move Up When'}</td>
+                  <td>1 Not Yet</td>
+                  <td>2 Emerging</td>
+                  <td>3 Consistent</td>
+                  <td>4 Exemplary</td>
+                  <td>Notes</td>
+                </tr>
+                ${rung.readyToMove.map((item, i) => `
+                <tr>
+                  <td><span class="behavior-question">${item}</span>${TOOLTIPS[rung.num]?.ready?.[i] ? `<span class="behavior-hint">${TOOLTIPS[rung.num].ready[i]}</span>` : ''}</td>
+                  ${[1,2,3,4].map(v => `
+                  <td class="score-cell">
+                    <input type="radio" class="score-radio" name="rung${rung.num}_ready_${i}" value="${v}" data-rung="${rung.num}" data-category="ready" onclick="toggleRadio(this)" onchange="updateScores()">
+                  </td>`).join('')}
+                  <td class="note-cell">
+                    <div class="note-preview" onclick="openNote(${rung.num}, 'ready', ${i})" id="notePreview_${rung.num}_ready_${i}">
+                      <svg class="note-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M11.5 1.5l3 3L5 14H2v-3L11.5 1.5z"/></svg>
+                      <span class="note-text"></span>
+                    </div>
+                    <input type="hidden" class="note-data" data-rung="${rung.num}" data-category="ready" data-behavior="${i}" value="">
                   </td>
                 </tr>`).join('')}
               </tbody>
             </table>
-            <span id="scoreVal${rung.num}" style="display:none"></span>
-            <span id="scoreFill${rung.num}" style="display:none"></span>
-            <span id="scorePct${rung.num}" style="display:none"></span>
+            <span id="competenceFill${rung.num}" style="display:none"></span>
+            <span id="competenceVal${rung.num}" style="display:none"></span>
+            <span id="readinessFill${rung.num}" style="display:none"></span>
+            <span id="readinessVal${rung.num}" style="display:none"></span>
             <div class="promotion-section">
-              <div class="promotion-signal"><strong>Promotion signal:</strong> ${rung.promotion}</div>
+              <div class="promotion-signal"><strong>Promotion signal:</strong> ${rung.readyToMove.join('. ')}.</div>
               <div class="promotion-row">
                 <div class="promotion-radios">
                   <span class="promo-label">Ready to promote?</span>
@@ -1552,9 +1760,9 @@ function renderRungs() {
   // Populate results menu
   const resultsMenu = document.getElementById('resultsMenu');
   if (resultsMenu) {
-    resultsMenu.innerHTML = RUNGS.map(r =>
-      `<div class="rung-menu-item" onclick="navigateToRung(event,'rung${r.num}')"><span class="rung-menu-num" style="background:${r.color}">${r.num}</span>Rung ${r.num}: ${r.title}</div>`
-    ).join('') + `<div class="rung-menu-item active" onclick="navigateToRung(event,'resultsSection')"><span class="rung-menu-num" style="background:var(--accent-gold)">&#9733;</span>Final Report</div>`;
+    resultsMenu.innerHTML = `<div class="rung-menu-inner">` + RUNGS.map(r =>
+      `<div class="rung-menu-item" style="background:${r.color}" onclick="navigateToRung(event,'rung${r.num}')">Rung ${r.num}: ${r.title}</div>`
+    ).join('') + `<div class="rung-menu-item active" style="background:var(--accent-gold)" onclick="navigateToRung(event,'resultsSection')">Final Report</div></div>`;
   }
 }
 
@@ -1570,34 +1778,82 @@ function toggleRadio(el) {
 }
 
 function updateScores() {
-  let grandTotal = 0, grandMax = 0;
+  let grandCompetenceScore = 0, grandCompetenceMax = 0;
+  let grandReadyScore = 0, grandReadyMax = 0;
   let highestQualified = 0;
 
   RUNGS.forEach(rung => {
-    const max = rung.behaviors.length * 4;
-    grandMax += max;
-    let score = 0;
-    for (let i = 0; i < rung.behaviors.length; i++) {
-      const checked = document.querySelector(`input[name="rung${rung.num}_b${i}"]:checked`);
-      if (checked) score += parseInt(checked.value);
+    // Excels scores
+    let excelsScore = 0;
+    for (let i = 0; i < rung.excels.length; i++) {
+      const checked = document.querySelector(`input[name="rung${rung.num}_excels_${i}"]:checked`);
+      if (checked) excelsScore += parseInt(checked.value);
     }
-    grandTotal += score;
-    const pct = max > 0 ? Math.round((score / max) * 100) : 0;
+    // Struggling scores (higher = better, means less struggling)
+    let strugglingScore = 0;
+    for (let i = 0; i < rung.struggling.length; i++) {
+      const checked = document.querySelector(`input[name="rung${rung.num}_struggling_${i}"]:checked`);
+      if (checked) strugglingScore += parseInt(checked.value);
+    }
+    // Ready to move up scores
+    let readyScore = 0;
+    for (let i = 0; i < rung.readyToMove.length; i++) {
+      const checked = document.querySelector(`input[name="rung${rung.num}_ready_${i}"]:checked`);
+      if (checked) readyScore += parseInt(checked.value);
+    }
 
-    document.getElementById(`scoreVal${rung.num}`).textContent = `${score} / ${max}`;
-    document.getElementById(`scoreFill${rung.num}`).style.width = `${pct}%`;
-    document.getElementById(`scorePct${rung.num}`).textContent = `${pct}%`;
-    if (pct >= 75) highestQualified = rung.num;
+    const competenceMax = (rung.excels.length + rung.struggling.length) * 4;
+    const competenceScore = excelsScore + strugglingScore;
+    const competencePct = competenceMax > 0 ? Math.round((competenceScore / competenceMax) * 100) : 0;
+
+    const readyMax = rung.readyToMove.length * 4;
+    const readyPct = readyMax > 0 ? Math.round((readyScore / readyMax) * 100) : 0;
+
+    grandCompetenceScore += competenceScore;
+    grandCompetenceMax += competenceMax;
+    grandReadyScore += readyScore;
+    grandReadyMax += readyMax;
+
+    // Update per-rung axis displays
+    document.getElementById(`competenceFill${rung.num}`).style.width = `${competencePct}%`;
+    document.getElementById(`competenceVal${rung.num}`).textContent = `${competenceScore}/${competenceMax} (${competencePct}%)`;
+    document.getElementById(`readinessFill${rung.num}`).style.width = `${readyPct}%`;
+    document.getElementById(`readinessVal${rung.num}`).textContent = `${readyScore}/${readyMax} (${readyPct}%)`;
+
+    if (competencePct >= 75) highestQualified = rung.num;
+
+    // Update header status badge
+    const statusEl = document.getElementById(`rungStatus${rung.num}`);
+    if (statusEl) {
+      if (competenceScore === 0) {
+        statusEl.className = 'rung-header-status';
+        statusEl.textContent = '';
+      } else if (competencePct >= 75) {
+        statusEl.className = 'rung-header-status visible results-rung-badge lp-badge-strong';
+        statusEl.textContent = 'Strong';
+      } else if (competencePct >= 50) {
+        statusEl.className = 'rung-header-status visible results-rung-badge lp-badge-developing';
+        statusEl.textContent = 'Developing';
+      } else {
+        statusEl.className = 'rung-header-status visible results-rung-badge lp-badge-needs';
+        statusEl.textContent = 'Needs growth';
+      }
+    }
   });
 
-  const overallPct = grandMax > 0 ? Math.round((grandTotal / grandMax) * 100) : 0;
-  document.getElementById('overallScore').textContent = `${grandTotal}/${grandMax}`;
-  document.getElementById('overallPct').textContent = `${overallPct}%`;
+  // Overall
+  const overallCompPct = grandCompetenceMax > 0 ? Math.round((grandCompetenceScore / grandCompetenceMax) * 100) : 0;
+  const overallReadyPct = grandReadyMax > 0 ? Math.round((grandReadyScore / grandReadyMax) * 100) : 0;
+  document.getElementById('overallScore').textContent = `${grandCompetenceScore}/${grandCompetenceMax}`;
+  document.getElementById('overallPct').textContent = `${overallCompPct}%`;
+  document.getElementById('overallReadyScore').textContent = `${grandReadyScore}/${grandReadyMax}`;
+  document.getElementById('overallReadyPct').textContent = `${overallReadyPct}%`;
 
+  // Final level
   const levelEl = document.getElementById('finalLevel');
   const levelImg = document.getElementById('resultsLevelImg');
   const levelLeft = levelImg ? levelImg.parentElement : null;
-  if (grandTotal === 0) {
+  if (grandCompetenceScore === 0 && grandReadyScore === 0) {
     levelEl.querySelector('.fl-name').textContent = 'Not yet assessed';
     if (levelImg) levelImg.style.backgroundImage = '';
     if (levelLeft) levelLeft.classList.remove('has-image');
@@ -1617,24 +1873,48 @@ function updateScores() {
   const rowsContainer = document.getElementById('resultsRungRows');
   if (rowsContainer) {
     rowsContainer.innerHTML = RUNGS.map((rung, i) => {
-      const max = rung.behaviors.length * 4;
-      let score = 0;
-      for (let b = 0; b < rung.behaviors.length; b++) {
-        const checked = document.querySelector(`input[name="rung${rung.num}_b${b}"]:checked`);
-        if (checked) score += parseInt(checked.value);
+      let excelsScore = 0, strugglingScore = 0, readyScore = 0;
+      for (let b = 0; b < rung.excels.length; b++) {
+        const checked = document.querySelector(`input[name="rung${rung.num}_excels_${b}"]:checked`);
+        if (checked) excelsScore += parseInt(checked.value);
       }
-      const pct = max > 0 ? Math.round((score / max) * 100) : 0;
-      const barColor = pct >= 75 ? '#059669' : pct >= 50 ? '#D97706' : pct > 0 ? '#DC2626' : '#555';
+      for (let b = 0; b < rung.struggling.length; b++) {
+        const checked = document.querySelector(`input[name="rung${rung.num}_struggling_${b}"]:checked`);
+        if (checked) strugglingScore += parseInt(checked.value);
+      }
+      for (let b = 0; b < rung.readyToMove.length; b++) {
+        const checked = document.querySelector(`input[name="rung${rung.num}_ready_${b}"]:checked`);
+        if (checked) readyScore += parseInt(checked.value);
+      }
+      const compMax = (rung.excels.length + rung.struggling.length) * 4;
+      const compScore = excelsScore + strugglingScore;
+      const compPct = compMax > 0 ? Math.round((compScore / compMax) * 100) : 0;
+      const readyMax = rung.readyToMove.length * 4;
+      const readyPct = readyMax > 0 ? Math.round((readyScore / readyMax) * 100) : 0;
+
+      const compColor = compPct >= 75 ? '#059669' : compPct >= 50 ? '#D97706' : compPct > 0 ? '#DC2626' : '#555';
+      const readyColor = readyPct >= 75 ? '#059669' : readyPct >= 50 ? '#D97706' : readyPct > 0 ? '#DC2626' : '#555';
       let badge, badgeClass;
-      if (pct >= 75) { badge = 'Strong'; badgeClass = 'lp-badge-strong'; }
-      else if (pct >= 50) { badge = 'Developing'; badgeClass = 'lp-badge-developing'; }
-      else if (pct > 0) { badge = 'Needs growth'; badgeClass = 'lp-badge-needs'; }
-      else { badge = 'Not scored'; badgeClass = 'lp-badge-none'; }
+      if (compScore === 0) { badge = 'Not scored'; badgeClass = 'lp-badge-none'; }
+      else if (compPct >= 75) { badge = 'Strong'; badgeClass = 'lp-badge-strong'; }
+      else if (compPct >= 50) { badge = 'Developing'; badgeClass = 'lp-badge-developing'; }
+      else { badge = 'Needs growth'; badgeClass = 'lp-badge-needs'; }
+
       return `<div class="results-rung-row">
         <div class="results-rung-num" style="background:${colors[i]}">${rung.num}</div>
         <div class="results-rung-title">${rung.title}</div>
-        <div class="results-rung-bar"><div class="results-rung-bar-fill" style="width:${pct}%;background:${barColor}"></div></div>
-        <div class="results-rung-pct">${pct}%</div>
+        <div style="flex:1;display:flex;flex-direction:column;gap:4px">
+          <div style="display:flex;align-items:center;gap:6px">
+            <span style="font-size:0.65rem;color:var(--text-muted);min-width:65px">Competence</span>
+            <div class="results-rung-bar"><div class="results-rung-bar-fill" style="width:${compPct}%;background:${compColor}"></div></div>
+            <span style="font-size:0.8rem;font-weight:600;min-width:35px;text-align:right">${compPct}%</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px">
+            <span style="font-size:0.65rem;color:var(--text-muted);min-width:65px">Readiness</span>
+            <div class="results-rung-bar"><div class="results-rung-bar-fill" style="width:${readyPct}%;background:${readyColor}"></div></div>
+            <span style="font-size:0.8rem;font-weight:600;min-width:35px;text-align:right">${readyPct}%</span>
+          </div>
+        </div>
         <div class="results-rung-badge ${badgeClass}">${badge}</div>
       </div>`;
     }).join('');
@@ -1648,13 +1928,24 @@ function gatherData() {
     rungs: {}
   };
   RUNGS.forEach(rung => {
-    const rungData = { scores: [], notes: [], promoStatus: null, rungNotes: '' };
-    for (let i = 0; i < rung.behaviors.length; i++) {
-      const checked = document.querySelector(`input[name="rung${rung.num}_b${i}"]:checked`);
-      rungData.scores.push(checked ? parseInt(checked.value) : null);
-      const noteEl = document.querySelector(`.note-data[data-rung="${rung.num}"][data-behavior="${i}"]`);
-      rungData.notes.push(noteEl ? noteEl.value : '');
-    }
+    const rungData = {
+      excelsScores: [], strugglingScores: [], readyScores: [],
+      excelsNotes: [], strugglingNotes: [], readyNotes: [],
+      promoStatus: null, rungNotes: ''
+    };
+    const categories = [
+      { key: 'excels', items: rung.excels, scores: 'excelsScores', notes: 'excelsNotes' },
+      { key: 'struggling', items: rung.struggling, scores: 'strugglingScores', notes: 'strugglingNotes' },
+      { key: 'ready', items: rung.readyToMove, scores: 'readyScores', notes: 'readyNotes' }
+    ];
+    categories.forEach(cat => {
+      for (let i = 0; i < cat.items.length; i++) {
+        const checked = document.querySelector(`input[name="rung${rung.num}_${cat.key}_${i}"]:checked`);
+        rungData[cat.scores].push(checked ? parseInt(checked.value) : null);
+        const noteEl = document.querySelector(`.note-data[data-rung="${rung.num}"][data-category="${cat.key}"][data-behavior="${i}"]`);
+        rungData[cat.notes].push(noteEl ? noteEl.value : '');
+      }
+    });
     const promo = document.querySelector(`input[name="promo${rung.num}"]:checked`);
     rungData.promoStatus = promo ? promo.value : null;
     const rungNotesEl = document.getElementById(`rungNotes${rung.num}`);
@@ -1703,43 +1994,47 @@ async function exportExcel() {
 
   // ── Summary sheet ──
   const sRows = [
-    ['Engineering Ladder Assessment','','','','',''],
-    ['','','','','',''],
-    ['Engineer Name', data.engineerName||'','','','',''],
-    ['Review Date', data.reviewDate||'','','','',''],
-    ['','','','','',''],
-    ['Rung','Title','Score','Max','Percentage','Status']
+    ['Engineering Ladder Assessment','','','','','','','',''],
+    ['','','','','','','','',''],
+    ['Engineer Name', data.engineerName||'','','','','','','',''],
+    ['Review Date', data.reviewDate||'','','','','','','',''],
+    ['','','','','','','','',''],
+    ['Rung','Title','Competence','Comp. Max','Comp. %','Readiness','Ready Max','Ready %','Status']
   ];
-  let grandTotal=0, grandMax=0, highestQ=0;
+  let grandCompTotal=0, grandCompMax=0, grandReadyTotal=0, grandReadyMax=0, highestQ=0;
   RUNGS.forEach(rung => {
     const rd = data.rungs[rung.num];
-    const max = rung.behaviors.length*4;
-    const score = rd.scores.reduce((a,s)=>a+(s||0),0);
-    const pct = max>0?score/max:0;
-    grandTotal+=score; grandMax+=max;
-    if(pct>=0.75) highestQ=rung.num;
-    const status = pct>=0.75?'Strong':pct>=0.5?'Developing':score>0?'Needs growth':'Not assessed';
-    sRows.push([rung.num, rung.title, score, max, Math.round(pct*100)+'%', status]);
+    const compScore = (rd.excelsScores||[]).reduce((a,s)=>a+(s||0),0) + (rd.strugglingScores||[]).reduce((a,s)=>a+(s||0),0);
+    const compMax = (rung.excels.length+rung.struggling.length)*4;
+    const compPct = compMax>0?compScore/compMax:0;
+    const readyScore = (rd.readyScores||[]).reduce((a,s)=>a+(s||0),0);
+    const readyMax = rung.readyToMove.length*4;
+    const readyPct = readyMax>0?readyScore/readyMax:0;
+    grandCompTotal+=compScore; grandCompMax+=compMax;
+    grandReadyTotal+=readyScore; grandReadyMax+=readyMax;
+    if(compPct>=0.75) highestQ=rung.num;
+    const status = compPct>=0.75?'Strong':compPct>=0.5?'Developing':compScore>0?'Needs growth':'Not assessed';
+    sRows.push([rung.num, rung.title, compScore, compMax, Math.round(compPct*100)+'%', readyScore, readyMax, Math.round(readyPct*100)+'%', status]);
   });
-  sRows.push(['','','','','','']);
-  sRows.push(['Overall Total','', grandTotal, grandMax, Math.round((grandTotal/grandMax)*100)+'%','']);
-  const lvl = highestQ>0?`Rung ${highestQ}: ${RUNGS[highestQ-1].title}`:grandTotal>0?'Below Rung 1':'Not yet assessed';
-  sRows.push(['Final Rung Level', lvl,'','','','']);
+  sRows.push(['','','','','','','','','']);
+  sRows.push(['Overall Total','', grandCompTotal, grandCompMax, grandCompMax>0?Math.round((grandCompTotal/grandCompMax)*100)+'%':'0%', grandReadyTotal, grandReadyMax, grandReadyMax>0?Math.round((grandReadyTotal/grandReadyMax)*100)+'%':'0%','']);
+  const lvl = highestQ>0?`Rung ${highestQ}: ${RUNGS[highestQ-1].title}`:grandCompTotal>0?'Below Rung 1':'Not yet assessed';
+  sRows.push(['Final Rung Level', lvl,'','','','','','','']);
 
   const sWs = XLSX.utils.aoa_to_sheet(sRows);
-  sWs['!cols'] = [{wch:20},{wch:20},{wch:8},{wch:6},{wch:12},{wch:14}];
-  sWs['!merges'] = [{s:{r:0,c:0},e:{r:0,c:5}}];
+  sWs['!cols'] = [{wch:20},{wch:20},{wch:12},{wch:10},{wch:10},{wch:12},{wch:10},{wch:10},{wch:14}];
+  sWs['!merges'] = [{s:{r:0,c:0},e:{r:0,c:8}}];
   sc(sWs,'A1',titleStyle);
   sc(sWs,'A3',labelStyle); sc(sWs,'A4',labelStyle);
   sc(sWs,'B3',{fill:{fgColor:gold}}); sc(sWs,'B4',{fill:{fgColor:gold}});
-  for(let c=0;c<6;c++) sc(sWs,XLSX.utils.encode_cell({r:5,c}),hdrStyle);
+  for(let c=0;c<9;c++) sc(sWs,XLSX.utils.encode_cell({r:5,c}),hdrStyle);
   RUNGS.forEach((r,i) => {
     const row = 6+i;
     const bg = i%2===0?{fgColor:white}:{fgColor:lightGray};
-    for(let c=0;c<6;c++) sc(sWs,XLSX.utils.encode_cell({r:row,c}),{fill:bg,alignment:{horizontal:c>=2?"center":"left"}});
+    for(let c=0;c<9;c++) sc(sWs,XLSX.utils.encode_cell({r:row,c}),{fill:bg,alignment:{horizontal:c>=2?"center":"left"}});
   });
   const totRow = 12;
-  for(let c=0;c<6;c++) sc(sWs,XLSX.utils.encode_cell({r:totRow,c}),{font:{bold:true,sz:11,color:{rgb:"1F3864"}},fill:{fgColor:gold},alignment:{horizontal:c>=2?"center":"left"}});
+  for(let c=0;c<9;c++) sc(sWs,XLSX.utils.encode_cell({r:totRow,c}),{font:{bold:true,sz:11,color:{rgb:"1F3864"}},fill:{fgColor:gold},alignment:{horizontal:c>=2?"center":"left"}});
   sc(sWs,XLSX.utils.encode_cell({r:totRow+1,c:0}),{font:{bold:true,sz:12,color:{rgb:"FFFFFF"}},fill:{fgColor:darkBlue}});
   sc(sWs,XLSX.utils.encode_cell({r:totRow+1,c:1}),{font:{bold:true,sz:12,color:{rgb:"B8860B"}},fill:{fgColor:darkBlue}});
   XLSX.utils.book_append_sheet(wb, sWs, 'Summary');
@@ -1750,48 +2045,83 @@ async function exportExcel() {
     const rows = [
       [`Rung ${rung.num}: ${rung.title}`, '', rung.subtitle, '', rung.salary, '', ''],
       [`Their question: ${rung.question}`,'','','','','',''],
-      ['','','','','','',''],
-      ['Observable Behavior','1 Not Yet','2 Emerging','3 Consistent','4 Exemplary','Score','Notes']
+      ['','','','','','','']
     ];
-    let total = 0;
-    rung.behaviors.forEach((b,i) => {
-      const s = rd.scores[i];
-      total += s||0;
-      const row = [b,'','','','', s||'', rd.notes[i]||''];
-      if(s) row[s] = '\u2713';
-      rows.push(row);
-    });
-    const max = rung.behaviors.length*4;
-    const pct = max>0?Math.round((total/max)*100):0;
+
+    // Helper to add a category section
+    function addCategorySection(label, colLabels, items, scores, notes) {
+      rows.push([label, '', '', '', '', '', '']);
+      const sectionHeaderIdx = rows.length - 1;
+      rows.push(['Signal', colLabels[0], colLabels[1], colLabels[2], colLabels[3], 'Score', 'Notes']);
+      let catTotal = 0;
+      items.forEach((item, i) => {
+        const s = scores[i];
+        catTotal += s||0;
+        const row = [item,'','','','', s||'', notes[i]||''];
+        if(s) row[s] = '\u2713';
+        rows.push(row);
+      });
+      return { sectionHeaderIdx, catTotal, catMax: items.length*4 };
+    }
+
+    const excelsInfo = addCategorySection('EXCELS WHEN',
+      ['1 Not Yet','2 Emerging','3 Consistent','4 Exemplary'],
+      rung.excels, rd.excelsScores||[], rd.excelsNotes||[]);
+
     rows.push(['','','','','','','']);
-    rows.push(['TOTAL SCORE','','','','',`${total} / ${max}`,`${pct}%`]);
+
+    const strugglingInfo = addCategorySection('STRUGGLING WHEN',
+      ['1 Frequently','2 Sometimes','3 Rarely','4 Never'],
+      rung.struggling, rd.strugglingScores||[], rd.strugglingNotes||[]);
+
     rows.push(['','','','','','','']);
-    // Promotion section header
+
+    const readyInfo = addCategorySection('READY TO MOVE UP WHEN',
+      ['1 Not Yet','2 Emerging','3 Consistent','4 Exemplary'],
+      rung.readyToMove, rd.readyScores||[], rd.readyNotes||[]);
+
+    rows.push(['','','','','','','']);
+
+    // Score summary
+    const compScore = excelsInfo.catTotal + strugglingInfo.catTotal;
+    const compMax = excelsInfo.catMax + strugglingInfo.catMax;
+    const compPct = compMax>0?Math.round((compScore/compMax)*100):0;
+    const readyPct = readyInfo.catMax>0?Math.round((readyInfo.catTotal/readyInfo.catMax)*100):0;
+    const scoreRowIdx = rows.length;
+    rows.push(['SCORE SUMMARY', `Competence: ${compScore}/${compMax} (${compPct}%)`, '', '', `Readiness: ${readyInfo.catTotal}/${readyInfo.catMax} (${readyPct}%)`, '', '']);
+
+    rows.push(['','','','','','','']);
+
+    // Promotion section
+    const promoHeaderRow = rows.length;
     rows.push(['PROMOTION READINESS','','','','','','']);
-    // Promotion signal - text spans columns B-G
-    rows.push(['Promotion signal', rung.promotion,'','','','','']);
-    // Ready to promote with checkbox-style display
+    const promoSignal = rung.readyToMove.join('. ') + '.';
+    const promoSignalRow = rows.length;
+    rows.push(['Promotion signal', promoSignal,'','','','','']);
     const promoVal = rd.promoStatus;
     const notYet = promoVal==='not_yet'?'\u2611':'\u2610';
     const onTrack = promoVal==='on_track'?'\u2611':'\u2610';
     const ready = promoVal==='ready'?'\u2611':'\u2610';
+    const promoReadyRow = rows.length;
     rows.push(['Ready to promote?', `${notYet} Not yet`, '', `${onTrack} On track`, '', `${ready} Ready now`, '']);
     rows.push(['','','','','','','']);
-    // 1:1 Notes section header
+    const notesHeaderRow = rows.length;
     rows.push(['1:1 NOTES','','','','','','']);
+    const notesRow = rows.length;
     rows.push([rd.rungNotes||'','','','','','','']);
 
     const ws = XLSX.utils.aoa_to_sheet(rows);
-    ws['!cols'] = [{wch:42},{wch:11},{wch:11},{wch:13},{wch:13},{wch:10},{wch:30}];
-    // Merges: title, question, promotion signal text, notes
-    const promoHeaderRow = 4+rung.behaviors.length+3;
-    const promoSignalRow = promoHeaderRow+1;
-    const promoReadyRow = promoSignalRow+1;
-    const notesHeaderRow = promoReadyRow+2;
-    const notesRow = notesHeaderRow+1;
+    ws['!cols'] = [{wch:42},{wch:13},{wch:13},{wch:13},{wch:13},{wch:10},{wch:30}];
+
+    // Merges
     ws['!merges'] = [
       {s:{r:0,c:0},e:{r:0,c:1}},
       {s:{r:1,c:0},e:{r:1,c:6}},
+      {s:{r:excelsInfo.sectionHeaderIdx,c:0},e:{r:excelsInfo.sectionHeaderIdx,c:6}},
+      {s:{r:strugglingInfo.sectionHeaderIdx,c:0},e:{r:strugglingInfo.sectionHeaderIdx,c:6}},
+      {s:{r:readyInfo.sectionHeaderIdx,c:0},e:{r:readyInfo.sectionHeaderIdx,c:6}},
+      {s:{r:scoreRowIdx,c:1},e:{r:scoreRowIdx,c:3}},
+      {s:{r:scoreRowIdx,c:4},e:{r:scoreRowIdx,c:6}},
       {s:{r:promoHeaderRow,c:0},e:{r:promoHeaderRow,c:6}},
       {s:{r:promoSignalRow,c:1},e:{r:promoSignalRow,c:6}},
       {s:{r:notesHeaderRow,c:0},e:{r:notesHeaderRow,c:6}},
@@ -1805,40 +2135,61 @@ async function exportExcel() {
     for(let c=0;c<7;c++) { const ref=XLSX.utils.encode_cell({r:0,c}); if(!ws[ref]) ws[ref]={v:'',t:'s'}; if(!ws[ref].s) ws[ref].s={fill:{fgColor:darkBlue}}; }
     // Question row
     sc(ws,'A2',subStyle);
-    // Header row
+
+    // Style section headers
+    const successBg = {rgb:"E8F5EC"};
+    const warningBg = {rgb:"FEF6E8"};
+    const blueBg = {rgb:"E8EEF8"};
+    [
+      {idx: excelsInfo.sectionHeaderIdx, bg: successBg, fc: {rgb:"059669"}},
+      {idx: strugglingInfo.sectionHeaderIdx, bg: warningBg, fc: {rgb:"D97706"}},
+      {idx: readyInfo.sectionHeaderIdx, bg: blueBg, fc: {rgb:"2E75B6"}}
+    ].forEach(({idx, bg, fc}) => {
+      for(let c=0;c<7;c++) sc(ws,XLSX.utils.encode_cell({r:idx,c}),{font:{bold:true,color:fc,sz:10},fill:{fgColor:bg},alignment:{vertical:"center"}});
+    });
+
+    // Style column header rows for each category
     const hdrColors = [darkBlue, redBg, yellowBg, lightBlue, greenBg, darkBlue, darkBlue];
     const hdrFonts = [{rgb:"FFFFFF"},{rgb:"000000"},{rgb:"000000"},{rgb:"000000"},{rgb:"000000"},{rgb:"FFFFFF"},{rgb:"FFFFFF"}];
-    for(let c=0;c<7;c++) {
-      sc(ws,XLSX.utils.encode_cell({r:3,c}),{
-        font:{bold:true,color:hdrFonts[c],sz:9},
-        fill:{fgColor:hdrColors[c]},
-        alignment:{horizontal:"center",vertical:"center",wrapText:true}
-      });
-    }
-    // Behavior rows
-    rung.behaviors.forEach((b,i) => {
-      const row = 4+i;
-      const bg = i%2===0?white:lightGray;
-      sc(ws,XLSX.utils.encode_cell({r:row,c:0}),{font:{sz:9},fill:{fgColor:bg},alignment:{wrapText:true,vertical:"center"}});
-      for(let c=1;c<=4;c++) {
-        const s = rd.scores[i];
-        const isChecked = s===c;
-        const checkColors = [null,redBg,yellowBg,lightBlue,greenBg];
-        sc(ws,XLSX.utils.encode_cell({r:row,c}),{
-          font:{sz:10,color:{rgb:isChecked?"1F3864":"CCCCCC"}},
-          fill:{fgColor: isChecked ? checkColors[c] : bg},
-          alignment:{horizontal:"center",vertical:"center"}
+    [excelsInfo.sectionHeaderIdx+1, strugglingInfo.sectionHeaderIdx+1, readyInfo.sectionHeaderIdx+1].forEach(hdrRow => {
+      for(let c=0;c<7;c++) {
+        sc(ws,XLSX.utils.encode_cell({r:hdrRow,c}),{
+          font:{bold:true,color:hdrFonts[c],sz:9},
+          fill:{fgColor:hdrColors[c]},
+          alignment:{horizontal:"center",vertical:"center",wrapText:true}
         });
       }
-      sc(ws,XLSX.utils.encode_cell({r:row,c:5}),{font:{bold:true,sz:10},fill:{fgColor:bg},alignment:{horizontal:"center",vertical:"center"}});
-      sc(ws,XLSX.utils.encode_cell({r:row,c:6}),{font:{sz:9,color:{rgb:"666666"}},fill:{fgColor:bg},alignment:{wrapText:true,vertical:"center"}});
     });
-    // Total row
-    const tRow = 4+rung.behaviors.length+1;
-    for(let c=0;c<7;c++) sc(ws,XLSX.utils.encode_cell({r:tRow,c}),{font:{bold:true,color:{rgb:"FFFFFF"},sz:11},fill:{fgColor:medBlue},alignment:{horizontal:c>=5?"center":"left"}});
+
+    // Style data rows for each category
+    function styleDataRows(sectionHeaderIdx, items, scores) {
+      items.forEach((item,i) => {
+        const row = sectionHeaderIdx+2+i;
+        const bg = i%2===0?white:lightGray;
+        sc(ws,XLSX.utils.encode_cell({r:row,c:0}),{font:{sz:9},fill:{fgColor:bg},alignment:{wrapText:true,vertical:"center"}});
+        for(let c=1;c<=4;c++) {
+          const s = scores[i];
+          const isChecked = s===c;
+          const checkColors = [null,redBg,yellowBg,lightBlue,greenBg];
+          sc(ws,XLSX.utils.encode_cell({r:row,c}),{
+            font:{sz:10,color:{rgb:isChecked?"1F3864":"CCCCCC"}},
+            fill:{fgColor: isChecked ? checkColors[c] : bg},
+            alignment:{horizontal:"center",vertical:"center"}
+          });
+        }
+        sc(ws,XLSX.utils.encode_cell({r:row,c:5}),{font:{bold:true,sz:10},fill:{fgColor:bg},alignment:{horizontal:"center",vertical:"center"}});
+        sc(ws,XLSX.utils.encode_cell({r:row,c:6}),{font:{sz:9,color:{rgb:"666666"}},fill:{fgColor:bg},alignment:{wrapText:true,vertical:"center"}});
+      });
+    }
+    styleDataRows(excelsInfo.sectionHeaderIdx, rung.excels, rd.excelsScores||[]);
+    styleDataRows(strugglingInfo.sectionHeaderIdx, rung.struggling, rd.strugglingScores||[]);
+    styleDataRows(readyInfo.sectionHeaderIdx, rung.readyToMove, rd.readyScores||[]);
+
+    // Score summary row
+    for(let c=0;c<7;c++) sc(ws,XLSX.utils.encode_cell({r:scoreRowIdx,c}),{font:{bold:true,color:{rgb:"FFFFFF"},sz:11},fill:{fgColor:medBlue},alignment:{horizontal:c===0?"left":"center"}});
 
     // Promotion header row - dark blue banner
-    for(let c=0;c<7;c++) sc(ws,XLSX.utils.encode_cell({r:promoHeaderRow,c}),{font:{bold:true,color:{rgb:"FFFFFF"},sz:10,},fill:{fgColor:darkBlue},alignment:{vertical:"center"}});
+    for(let c=0;c<7;c++) sc(ws,XLSX.utils.encode_cell({r:promoHeaderRow,c}),{font:{bold:true,color:{rgb:"FFFFFF"},sz:10},fill:{fgColor:darkBlue},alignment:{vertical:"center"}});
     // Promotion signal label + text
     sc(ws,XLSX.utils.encode_cell({r:promoSignalRow,c:0}),{font:{bold:true,sz:9,color:{rgb:"1F3864"}},fill:{fgColor:lightBlue},alignment:{vertical:"center"}});
     for(let c=1;c<7;c++) sc(ws,XLSX.utils.encode_cell({r:promoSignalRow,c}),{font:{sz:9,color:{rgb:"333333"}},fill:{fgColor:lightBlue},alignment:{wrapText:true,vertical:"center"}});
@@ -1872,17 +2223,21 @@ function exportData() {
   // Add context for AI agents / external systems
   data._context = {
     framework: "The CTO's New Engineering Ladder by Etienne de Bruin (March 2026)",
-    description: "A performance ladder that measures judgment, not just output. Engineers are assessed across 5 rungs, each with observable behaviors scored 1-4.",
+    description: "A performance ladder that measures judgment, not just output. Engineers are assessed across 5 rungs with two axes: Rung Competence (excels + struggling signals) and Promotion Readiness (ready to move up signals).",
     source: "https://ctosub.com/p/the-ctos-new-engineering-ladder",
-    scoringScale: { 1: "Not Yet", 2: "Emerging", 3: "Consistent", 4: "Exemplary" },
-    rungLevelRule: "Final rung level = highest rung where the engineer scores ≥ 75%.",
+    scoringScale: {
+      excels: { 1: "Not Yet", 2: "Emerging", 3: "Consistent", 4: "Exemplary" },
+      struggling: { 1: "Frequently", 2: "Sometimes", 3: "Rarely", 4: "Never" },
+      ready: { 1: "Not Yet", 2: "Emerging", 3: "Consistent", 4: "Exemplary" }
+    },
+    axes: {
+      competence: "Rung Competence = (excels scores + struggling scores) / max. Struggling items use inverted labels: 4=Never observed (good).",
+      readiness: "Promotion Readiness = ready-to-move-up scores / max."
+    },
+    rungLevelRule: "Final rung level = highest rung where Rung Competence >= 75%.",
     rungs: RUNGS.map(r => ({
-      num: r.num,
-      title: r.title,
-      subtitle: r.subtitle,
-      question: r.question,
-      behaviors: r.behaviors,
-      promotionSignal: r.promotion
+      num: r.num, title: r.title, subtitle: r.subtitle, question: r.question,
+      excels: r.excels, struggling: r.struggling, readyToMove: r.readyToMove
     }))
   };
 
@@ -1890,12 +2245,13 @@ function exportData() {
   const summary = {};
   RUNGS.forEach(r => {
     const rd = data.rungs[r.num];
-    const answered = rd.scores.filter(s => s !== null).length;
-    const total = r.behaviors.length;
-    const score = rd.scores.reduce((a, s) => a + (s || 0), 0);
-    const max = total * 4;
-    const pct = max > 0 ? Math.round((score / max) * 100) : 0;
-    summary[r.num] = { title: r.title, answered, total, score, maxScore: max, percentage: pct + '%', meetsThreshold: pct >= 75 };
+    const compScore = (rd.excelsScores || []).reduce((a, s) => a + (s || 0), 0) + (rd.strugglingScores || []).reduce((a, s) => a + (s || 0), 0);
+    const compMax = (r.excels.length + r.struggling.length) * 4;
+    const compPct = compMax > 0 ? Math.round((compScore / compMax) * 100) : 0;
+    const readyScore = (rd.readyScores || []).reduce((a, s) => a + (s || 0), 0);
+    const readyMax = r.readyToMove.length * 4;
+    const readyPct = readyMax > 0 ? Math.round((readyScore / readyMax) * 100) : 0;
+    summary[r.num] = { title: r.title, competenceScore: compScore, competenceMax: compMax, competencePct: compPct + '%', readinessScore: readyScore, readinessMax: readyMax, readinessPct: readyPct + '%', meetsThreshold: compPct >= 75 };
   });
   data._summary = summary;
 
@@ -1922,22 +2278,36 @@ function importData(event) {
       RUNGS.forEach(rung => {
         const rd = data.rungs && data.rungs[rung.num];
         if (!rd) return;
-        rd.scores.forEach((s, i) => {
-          if (s !== null) {
-            const radio = document.querySelector(`input[name="rung${rung.num}_b${i}"][value="${s}"]`);
-            if (radio) radio.checked = true;
-          }
-        });
-        if (rd.notes) {
-          rd.notes.forEach((n, i) => {
-            const el = document.querySelector(`.note-data[data-rung="${rung.num}"][data-behavior="${i}"]`);
-            if (el) el.value = n;
-            updateNotePreview(rung.num, i, n);
+
+        // New format
+        if (rd.excelsScores) {
+          const categories = [
+            { key: 'excels', scores: rd.excelsScores, notes: rd.excelsNotes || [] },
+            { key: 'struggling', scores: rd.strugglingScores, notes: rd.strugglingNotes || [] },
+            { key: 'ready', scores: rd.readyScores, notes: rd.readyNotes || [] }
+          ];
+          categories.forEach(cat => {
+            cat.scores.forEach((s, i) => {
+              if (s !== null) {
+                const radio = document.querySelector(`input[name="rung${rung.num}_${cat.key}_${i}"][value="${s}"]`);
+                if (radio) { radio.checked = true; radio.dataset.wasChecked = 'true'; }
+              }
+            });
+            if (cat.notes) {
+              cat.notes.forEach((n, i) => {
+                const el = document.querySelector(`.note-data[data-rung="${rung.num}"][data-category="${cat.key}"][data-behavior="${i}"]`);
+                if (el) el.value = n;
+                updateNotePreview(rung.num, cat.key, i, n);
+              });
+            }
           });
         }
+        // Legacy format support: old flat scores array
+        // (won't map perfectly but allows some migration)
+
         if (rd.promoStatus) {
           const radio = document.querySelector(`input[name="promo${rung.num}"][value="${rd.promoStatus}"]`);
-          if (radio) radio.checked = true;
+          if (radio) { radio.checked = true; radio.dataset.wasChecked = 'true'; }
         }
         const notesEl = document.getElementById(`rungNotes${rung.num}`);
         if (notesEl && rd.rungNotes) {
@@ -1958,24 +2328,26 @@ function resetAll() {
   if (!confirm('Reset all scores and notes? This cannot be undone.')) return;
   document.getElementById('engineerName').value = '';
   document.getElementById('reviewDate').value = '';
-  document.querySelectorAll('.score-radio').forEach(r => r.checked = false);
+  document.querySelectorAll('.score-radio').forEach(r => { r.checked = false; r.dataset.wasChecked = 'false'; });
   document.querySelectorAll('.note-data, input[id^="rungNotes"]').forEach(el => el.value = '');
   document.querySelectorAll('.note-preview').forEach(p => {
     p.classList.remove('has-content');
     const span = p.querySelector('.note-text');
     if (span) span.textContent = p.classList.contains('rung-note-preview') ? '1:1 Notes' : '';
   });
-  document.querySelectorAll('input[name^="promo"]').forEach(r => r.checked = false);
+  document.querySelectorAll('input[name^="promo"]').forEach(r => { r.checked = false; r.dataset.wasChecked = 'false'; });
   updateScores();
 }
 
 // ── Note editor ──
-let currentNote = { type: null, rung: null, behavior: null };
+let currentNote = { type: null, rung: null, category: null, behavior: null };
 
-function openNote(rung, behavior) {
-  currentNote = { type: 'behavior', rung, behavior };
-  const hidden = document.querySelector(`.note-data[data-rung="${rung}"][data-behavior="${behavior}"]`);
-  const behaviorText = RUNGS[rung - 1].behaviors[behavior];
+function openNote(rung, category, behavior) {
+  currentNote = { type: 'behavior', rung, category, behavior };
+  const hidden = document.querySelector(`.note-data[data-rung="${rung}"][data-category="${category}"][data-behavior="${behavior}"]`);
+  const categories = { excels: 'excels', struggling: 'struggling', ready: 'readyToMove' };
+  const items = RUNGS[rung - 1][categories[category]];
+  const behaviorText = items[behavior];
   document.getElementById('noteEditorTitle').textContent = `Note — Rung ${rung}`;
   document.getElementById('noteEditorContext').textContent = behaviorText;
   document.getElementById('noteEditorText').value = hidden ? hidden.value : '';
@@ -1996,9 +2368,9 @@ function openRungNote(rung) {
 function saveNote() {
   const text = document.getElementById('noteEditorText').value.trim();
   if (currentNote.type === 'behavior') {
-    const hidden = document.querySelector(`.note-data[data-rung="${currentNote.rung}"][data-behavior="${currentNote.behavior}"]`);
+    const hidden = document.querySelector(`.note-data[data-rung="${currentNote.rung}"][data-category="${currentNote.category}"][data-behavior="${currentNote.behavior}"]`);
     if (hidden) hidden.value = text;
-    updateNotePreview(currentNote.rung, currentNote.behavior, text);
+    updateNotePreview(currentNote.rung, currentNote.category, currentNote.behavior, text);
   } else if (currentNote.type === 'rung') {
     const hidden = document.getElementById(`rungNotes${currentNote.rung}`);
     if (hidden) hidden.value = text;
@@ -2013,11 +2385,11 @@ function clearNote() {
 
 function closeNote() {
   document.getElementById('noteOverlay').classList.remove('open');
-  currentNote = { type: null, rung: null, behavior: null };
+  currentNote = { type: null, rung: null, category: null, behavior: null };
 }
 
-function updateNotePreview(rung, behavior, text) {
-  const preview = document.getElementById(`notePreview_${rung}_${behavior}`);
+function updateNotePreview(rung, category, behavior, text) {
+  const preview = document.getElementById(`notePreview_${rung}_${category}_${behavior}`);
   if (!preview) return;
   const span = preview.querySelector('.note-text');
   if (text) {
@@ -2047,24 +2419,13 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape') { closeNote(); }
 });
 
-function toggleRungMenu(wrap) {
-  const menu = wrap.querySelector('.rung-menu');
-  if (!menu) return;
-  const wasOpen = menu.classList.contains('open');
-  document.querySelectorAll('.rung-menu.open').forEach(m => m.classList.remove('open'));
-  if (!wasOpen) menu.classList.add('open');
-}
 function navigateToRung(evt, id) {
   if (evt) evt.stopPropagation();
-  document.querySelectorAll('.rung-menu.open').forEach(m => m.classList.remove('open'));
+  document.querySelectorAll('.rung-menu').forEach(m => m.classList.add('hiding'));
+  setTimeout(() => document.querySelectorAll('.rung-menu.hiding').forEach(m => m.classList.remove('hiding')), 800);
   const el = document.getElementById(id);
   if (el) el.scrollIntoView({ behavior: 'smooth' });
 }
-document.addEventListener('click', e => {
-  if (!e.target.closest('.rung-title-wrap')) {
-    document.querySelectorAll('.rung-menu.open').forEach(m => m.classList.remove('open'));
-  }
-});
 
 function openImgLightbox(rungNum) {
   const rung = RUNGS.find(r => r.num === rungNum);
